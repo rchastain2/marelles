@@ -1,11 +1,17 @@
 unit computer;
 
-{$mode objfpc}{$h+}
+{$mode objfpc}{$h+}{$codepage utf8}
 
 interface
 
 uses
   game;
+
+const
+  enginename = 'Aléa';
+  engineversion = '0.1';
+  enginefullname = enginename + ' ' + engineversion;
+  enginedescription = 'joue une action légale au hasard';
 
 type
   computeractionty = record

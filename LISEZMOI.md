@@ -65,7 +65,9 @@ Le programme du dossier `factory` calcule ainsi les tables `neighbours` et `line
 
 ## Implémenter un adversaire artificiel
 
-Le programme est prêt à recevoir un vrai adversaire : il suffit de remplacer la fonction `chooseturn` de `computer.pas`. Le reste (menus, thread de calcul, enchaînement du tour, journal) n'a pas à changer.
+L'adversaire actuel, *Aléa 0.1*, joue une action légale au hasard, après une pause de 1,5 seconde qui simule la réflexion. Il ne sert qu'à tenir la place d'un vrai adversaire.
+
+Le programme est prêt à recevoir un vrai adversaire : il suffit de remplacer la fonction `chooseturn` de `computer.pas`, et de mettre à jour les constantes `enginename`, `engineversion` et `enginedescription` du même fichier. Le nom et la version de l'adversaire apparaissent dans le journal, dans la ligne d'état et dans la boîte « À propos ». Le reste (menus, thread de calcul, enchaînement du tour, journal) n'a pas à changer.
 
 ### Le contrat de `chooseturn`
 
@@ -132,7 +134,7 @@ Trois points à respecter dans le moteur :
 - **ne toucher ni à la fenêtre, ni à la vraie partie** : tout passe par la copie reçue et par le résultat renvoyé ;
 - **savoir s'interrompre** : une longue recherche doit tester régulièrement `terminated`, sans quoi la fenêtre reste bloquée jusqu'à la fin du calcul quand on l'interrompt. Il faudra pour cela passer le thread (ou un indicateur d'arrêt) à `chooseturn`.
 
-La constante `thinkingdelay` de `computerthread.pas` ajoute une pause artificielle avant le calcul, utile pour voir le thread à l'œuvre ; on la mettra à 0 une fois le vrai adversaire en place.
+La constante `thinkingdelay` de `computerthread.pas` ajoute une pause artificielle avant le calcul, utile pour voir le thread à l'œuvre ; on la mettra à 0 une fois le vrai adversaire en place, et on retirera de la boîte « À propos » la phrase qui la mentionne.
 
 ### Mesurer la force du nouvel adversaire
 

@@ -56,7 +56,7 @@ Click a free point to place a piece. To move a piece, drag it to its destination
 
 The status line shows whose turn it is, what to do and how many pieces are left to place.
 
-For now, the computer plays a random legal action: it is only a placeholder for a real opponent.
+For now, the computer opponent, *Aléa 0.1*, plays a random legal action after a pause of 1.5 seconds that simulates thinking: it is only a placeholder for a real opponent.
 
 ## Building
 

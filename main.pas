@@ -130,6 +130,7 @@ var
   dir: filenamety;
 begin
   writelog('Marelles ' + appversion + ', compilé le ' + {$i %date%} + ' avec FPC ' + {$i %fpcversion%}, true);
+  writelog('Adversaire : ' + string(enginefullname));
   dir := filedir(sys_getapplicationpath) + 'images/';
   fplateau := tmaskedbitmap.create(bmk_rgb);
   fplateau.loadfromfile(dir + 'plateau.png');
@@ -172,7 +173,7 @@ begin
   fgame.init();
   writelog('Nouvelle partie');
   if fcomputer <> 0 then
-    writelog('L''ordinateur joue les ' + string(playernames[fcomputer]));
+    writelog(string(enginefullname) + ' joue les ' + string(playernames[fcomputer]));
   fselected := -1;
   fdragging := false;
   updatestatus();
@@ -187,7 +188,7 @@ var
 begin
   p := playerlabel(fgame.player);
   if fthread <> nil then
-    s := p + ' : l''ordinateur réfléchit...'
+    s := p + ' : ' + enginename + ' joue...'
   else
     case fgame.phase of
       ph_place:
@@ -266,7 +267,7 @@ begin
   if fcomputer = 0 then
     writelog('L''ordinateur ne joue plus')
   else
-    writelog('L''ordinateur joue les ' + string(playernames[fcomputer]));
+    writelog(string(enginefullname) + ' joue les ' + string(playernames[fcomputer]));
   updatestatus();
 end;
 
@@ -282,7 +283,7 @@ function tmainfo.playerlabel(const aplayer: integer): msestring;
 begin
   result := playernames[aplayer];
   if fcomputer = aplayer then
-    result := result + ' (ordinateur)'
+    result := result + ' (' + enginename + ')'
   else if fcomputer <> 0 then
     result := result + ' (vous)';
 end;
@@ -464,7 +465,8 @@ begin
   writelog('Commande À propos');
   showmessage(
     'Marelles ' + appversion + lineend + lineend +
-    'Compilé le ' + {$i %date%} + ' avec FPC ' + {$i %fpcversion%} + ' et MSEgui ' + mseguiversiontext + '.',
+    'Compilé le ' + {$i %date%} + ' avec FPC ' + {$i %fpcversion%} + ' et MSEgui ' + mseguiversiontext + '.' + lineend + lineend +
+    'Adversaire : ' + enginefullname + ', qui ' + enginedescription + ' après une pause de ' + inttostrmse(thinkingdelay) + ' ms simulant la réflexion.',
     'À propos'
   );
 end;
