@@ -1,5 +1,5 @@
 
-# Marelle
+# Marelles
 
 *MSEgui* implementation of Nine Men's Morris.
 
@@ -75,7 +75,7 @@ Or provide the path to an existing MSEgui repository:
 make MSEDIR=/path/to/mseide-msegui/
 ```
 
-Or open *marelle.prj* in MSEide.
+Or open *marelles.prj* in MSEide.
 
 ## Credits
 

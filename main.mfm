@@ -13,7 +13,7 @@ object mainfo: tmainfo
   )
   mainmenu = menubar
   statfile = mainstat
-  caption = 'Marelle'
+  caption = 'Marelles'
   windowopacity = -Inf
   oncreate = createev
   ondestroy = destroyev
@@ -246,7 +246,7 @@ object mainfo: tmainfo
     top = 216
   end
   object mainstat: tstatfile
-    filename = 'marelle.sta'
+    filename = 'marelles.sta'
     left = 32
     top = 280
   end

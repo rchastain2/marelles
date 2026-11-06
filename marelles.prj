@@ -17,8 +17,8 @@ order14=0
 order15=0
 order16=0
 [projectoptions]
-projectdir=/home/roland/Documents/pascal/msegui/marelle
-projectfilename=/home/roland/Documents/pascal/msegui/marelle/marelle.prj
+projectdir=/home/roland/Documents/pascal/msegui/echecs/marelle
+projectfilename=/home/roland/Documents/pascal/msegui/echecs/marelle/marelles.prj
 options=131
  [projectoptionsfo.toolshortcuts]
  dropdowncolwidths=3
@@ -252,8 +252,8 @@ exceptignore=1
  0
 nodebugbeginend=0
 fpcgdbworkaround=1
-mainfile=marelle.pas
-targetfile=marelle${EXEEXT}
+mainfile=marelles.pas
+targetfile=marelles${EXEEXT}
 makecommand=${COMPILER}
 makedir=
 unitdirs=4
@@ -510,7 +510,7 @@ modulenames=1
 moduletypes=1
  TMAINFO
 modulefiles=1
- /home/roland/Documents/pascal/msegui/marelle/main.mfm
+ /home/roland/Documents/pascal/msegui/echecs/marelle/main.mfm
 macrogroup=0
 forcezorder=0
 stripmessageesc=0
@@ -594,20 +594,20 @@ findhistory=0
 findoptions=1
 editpos=2
  0,-1073741823
- 11,7
+ 37,148
 bookmarks0=0
 bookmarks1=0
 sourcefiles=2
- /home/roland/Documents/pascal/msegui/marelle/marelle.pas
- /home/roland/Documents/pascal/msegui/marelle/main.pas
+ /home/roland/Documents/pascal/msegui/echecs/marelle/marelles.pas
+ /home/roland/Documents/pascal/msegui/echecs/marelle/main.pas
 relpaths=2
- marelle.pas
+ marelles.pas
  main.pas
 ismoduletexts=2
  0
  0
 modules=1
- /home/roland/Documents/pascal/msegui/marelle/main.mfm
+ /home/roland/Documents/pascal/msegui/echecs/marelle/main.mfm
 moduleoptions=1
  0
 visiblemodules=1
@@ -647,7 +647,7 @@ windowlayout=568
  cx=0
  cy=0
  filehistory=2
-  /home/roland/Documents/pascal/msegui/marelle/main.pas
+  /home/roland/Documents/pascal/msegui/echecs/marelle/main.pas
   /home/mse/packs/standard/git/mseide-msegui/apps/ide/main.pas
  filefilterindex=0
  filefilter="*.pp" "*.pas" "*.inc" "*.dpr" "*.lpr"
@@ -739,7 +739,7 @@ windowlayout=568
  [disassfo]
  splitdir=0
  useroptions=268451947
- stackedunder=
+ stackedunder=mainfo
  parent=
  mdistate=0
  nx=0
@@ -987,7 +987,7 @@ windowlayout=568
  ncy=0
  x=0
  y=475
- cx=675
+ cx=943
  cy=95
  rcx=0
  rcy=0
@@ -1103,7 +1103,7 @@ windowlayout=568
  ncy=0
  x=0
  y=0
- cx=675
+ cx=943
  cy=472
  rcx=0
  rcy=0
@@ -1143,7 +1143,7 @@ windowlayout=568
  ncy=0
  x=19
  y=145
- cx=685
+ cx=953
  cy=570
  rcx=0
  rcy=0

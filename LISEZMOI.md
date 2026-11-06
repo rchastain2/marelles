@@ -1,5 +1,5 @@
 
-# Marelle
+# Marelles
 
 Jeu de la marelle (ou des mérelles, ou des moulins) pour *MSEide+MSEgui*.
 

@@ -28,7 +28,7 @@ PFLAGS += -Fu$(AGGPAS)
 PROGRAMS := pions plateau marques icone
 TOOLS := preview
 ICONS := icone16.png icone32.png icone48.png icone64.png icone128.png
-IMAGES := blanc.png noir.png plateau.png selection.png destination.png prise.png $(ICONS) marelle.ico
+IMAGES := blanc.png noir.png plateau.png selection.png destination.png prise.png $(ICONS) marelles.ico
 
 all: $(IMAGES)
 
@@ -53,7 +53,7 @@ selection.png destination.png prise.png &: marques
 $(ICONS) &: icone
 	@./icone
 
-marelle.ico: $(ICONS)
+marelles.ico: $(ICONS)
 	@magick $(ICONS) $@
 
 clean:

@@ -129,7 +129,7 @@ procedure tmainfo.createev(const sender: TObject);
 var
   dir: filenamety;
 begin
-  writelog('Marelle ' + appversion + ', compilé le ' + {$i %date%} + ' avec FPC ' + {$i %fpcversion%}, true);
+  writelog('Marelles ' + appversion + ', compilé le ' + {$i %date%} + ' avec FPC ' + {$i %fpcversion%}, true);
   dir := filedir(sys_getapplicationpath) + 'images/';
   fplateau := tmaskedbitmap.create(bmk_rgb);
   fplateau.loadfromfile(dir + 'plateau.png');
@@ -146,6 +146,7 @@ begin
   icon.loadfromfile(dir + 'icone48.png');
   writelog(format('Hauteur de la barre de menu : %d px, correction : %d px', [container.bounds_y, containerheight - container.bounds_cy]));
   bounds_cy := bounds_cy + containerheight - container.bounds_cy;
+  caption := 'Marelles ' + appversion;
   fgame := tgame.create();
   fcomputer := 0;
   updatecomputer();
@@ -462,10 +463,10 @@ procedure tmainfo.aboutev(const sender: TObject);
 begin
   writelog('Commande À propos');
   showmessage(
-    'Marelle ' + appversion + lineend + lineend +
-    'Jeu du moulin, ou des mérelles, pour deux joueurs, ou contre l''ordinateur.' + lineend + lineend +
+    'Marelles ' + appversion + lineend + lineend +
     'Compilé le ' + {$i %date%} + ' avec FPC ' + {$i %fpcversion%} + ' et MSEgui ' + mseguiversiontext + '.',
-    'À propos');
+    'À propos'
+  );
 end;
 
 procedure tmainfo.statafterreadev(const sender: TObject);

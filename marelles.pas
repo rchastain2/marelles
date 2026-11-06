@@ -1,9 +1,9 @@
-program marelle;
+program marelles;
 
 {$mode objfpc}{$h+}
 {$ifdef mswindows}
 {$apptype gui}
-{$R marelle.rc}
+{$R marelles.rc}
 {$endif}
 
 uses

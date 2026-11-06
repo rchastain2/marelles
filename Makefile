@@ -19,18 +19,18 @@ PFLAGS += -Fu$(MSELIBDIR)kernel/$(OS)
 PFLAGS += -CX -Xs -XX -O2
 
 SOURCES := $(wildcard *.pas)
-PROGRAM := marelle
+PROGRAM := marelles
 
 $(PROGRAM): $(PROGRAM).pas $(SOURCES)
 	@$(PC) $(PFLAGS) $<
 
-marelle.desktop:
-	@printf '%s\n' '[Desktop Entry]' 'Type=Application' 'Name=Marelle' \
+marelles.desktop:
+	@printf '%s\n' '[Desktop Entry]' 'Type=Application' 'Name=Marelles' \
 	  'Comment=Jeu du moulin (mérelles)' 'Exec=$(CURDIR)/$(PROGRAM)' \
 	  'Path=$(CURDIR)' 'Icon=$(CURDIR)/images/icone128.png' \
 	  'Terminal=false' 'Categories=Game;BoardGame;' > $@
 
-install-desktop: marelle.desktop
+install-desktop: marelles.desktop
 	@mkdir -p ~/.local/share/applications
 	@cp -v $< ~/.local/share/applications/
 
