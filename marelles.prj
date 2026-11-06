@@ -17,8 +17,8 @@ order14=0
 order15=0
 order16=0
 [projectoptions]
-projectdir=/home/roland/Documents/pascal/msegui/echecs/marelle
-projectfilename=/home/roland/Documents/pascal/msegui/echecs/marelle/marelles.prj
+projectdir=/home/roland/Documents/pascal/msegui/echecs/marelles
+projectfilename=/home/roland/Documents/pascal/msegui/echecs/marelles/marelles.prj
 options=131
  [projectoptionsfo.toolshortcuts]
  dropdowncolwidths=3
@@ -510,7 +510,7 @@ modulenames=1
 moduletypes=1
  TMAINFO
 modulefiles=1
- /home/roland/Documents/pascal/msegui/echecs/marelle/main.mfm
+ /home/roland/Documents/pascal/msegui/echecs/marelles/main.mfm
 macrogroup=0
 forcezorder=0
 stripmessageesc=0
@@ -598,8 +598,8 @@ editpos=2
 bookmarks0=0
 bookmarks1=0
 sourcefiles=2
- /home/roland/Documents/pascal/msegui/echecs/marelle/marelles.pas
- /home/roland/Documents/pascal/msegui/echecs/marelle/main.pas
+ /home/roland/Documents/pascal/msegui/echecs/marelles/marelles.pas
+ /home/roland/Documents/pascal/msegui/echecs/marelles/main.pas
 relpaths=2
  marelles.pas
  main.pas
@@ -607,7 +607,7 @@ ismoduletexts=2
  0
  0
 modules=1
- /home/roland/Documents/pascal/msegui/echecs/marelle/main.mfm
+ /home/roland/Documents/pascal/msegui/echecs/marelles/main.mfm
 moduleoptions=1
  0
 visiblemodules=1
@@ -647,7 +647,7 @@ windowlayout=568
  cx=0
  cy=0
  filehistory=2
-  /home/roland/Documents/pascal/msegui/echecs/marelle/main.pas
+  /home/roland/Documents/pascal/msegui/echecs/marelles/main.pas
   /home/mse/packs/standard/git/mseide-msegui/apps/ide/main.pas
  filefilterindex=0
  filefilter="*.pp" "*.pas" "*.inc" "*.dpr" "*.lpr"

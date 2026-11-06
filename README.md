@@ -63,8 +63,8 @@ For now, the computer plays a random legal action: it is only a placeholder for 
 You need Free Pascal and [MSEgui](https://github.com/mse-org/mseide-msegui):
 
 ```Bash
-git clone https://github.com/rchastain2/marelle.git
-cd marelle
+git clone https://github.com/rchastain2/marelles.git
+cd marelles
 git clone https://github.com/mse-org/mseide-msegui.git --single-branch --depth 1
 make
 ```
