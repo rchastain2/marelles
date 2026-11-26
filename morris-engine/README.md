@@ -10,7 +10,7 @@ Licence : GPL v3 (voir `COPYING`), comme Morris.
 make
 ```
 
-Produit `build/libmorris-engine.so` et le programme de test `build/morris-cli`. Nécessite un compilateur C++20 (GCC 10 ou plus récent). `make test` lance une partie du moteur contre lui-même, `make clean` supprime le dossier `build`.
+Produit `build/libmorris-engine.so` et le programme de test `build/morristest-c`. Nécessite un compilateur C++20 (GCC 10 ou plus récent). `make clean` supprime le dossier `build`.
 
 ## Interface
 
@@ -27,9 +27,29 @@ Voir `include/morris-engine.h`. Convention de *Marelles* : points numérotés de
 
 `morris_choose` renvoie `MORRIS_OK`, `MORRIS_NO_MOVE` (aucun coup possible ou moins de trois pièces), `MORRIS_INVALID` (paramètres incorrects) ou `MORRIS_ERROR`. L'appel est bloquant ; un seul calcul à la fois par moteur.
 
-## Test
+## Liaison Pascal
+
+L'unité `morrisengine.pas` charge la bibliothèque dynamiquement (`loadmorrisengine`), d'abord dans le dossier de l'exécutable, puis dans les chemins du système. Elle renvoie `false` si la bibliothèque est absente ou incomplète.
+
+## Tests
+
+Deux programmes de test parallèles : `test/morristest.c` et `test/morristest.pas`.
+
+| Cible | Effet |
+|---|---|
+| `make test-c` | compile et lance `build/morristest-c` (une partie du moteur contre lui-même) |
+| `make test-pas` | compile et lance `build/morristest-pas` (nécessite Free Pascal) |
+| `make test` | lance les deux |
 
 ```
-build/morris-cli play [msec] [demi-coups]
-build/morris-cli pos <24 caractères .WB> <main blancs> <main noirs> <trait 1|2> [msec]
+build/morristest-c play [msec] [demi-coups]
+build/morristest-c pos <24 caractères .WB> <main blancs> <main noirs> <trait 1|2> [msec]
 ```
+
+La version C ne dépend que de la bibliothèque, avec un contrôle minimal des coups ; `pos` affiche le coup choisi dans une position donnée.
+
+```
+build/morristest-pas [all|play|stop] [msec] [parties]
+```
+
+`play` fait jouer le moteur contre lui-même en soumettant chaque coup à la classe `tgame` de *Marelles* (`../game.pas`), qui sert d'arbitre ; `stop` vérifie qu'un appel à `morris_stop` depuis un autre thread interrompt la recherche.

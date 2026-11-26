@@ -2,10 +2,12 @@ CXX      ?= g++
 CC       ?= gcc
 CXXFLAGS ?= -O2 -DNDEBUG
 CFLAGS   ?= -O2
+FPC      ?= fpc
 
 BUILD := build
 LIB   := $(BUILD)/libmorris-engine.so
-CLI   := $(BUILD)/morris-cli
+CTEST := $(BUILD)/morristest-c
+PTEST := $(BUILD)/morristest-pas
 
 SRCS := morris-engine.cc algo_alphabeta.cc board.cc boardspec.cc gamehistory.cc rules.cc ttable.cc
 OBJS := $(SRCS:%.cc=$(BUILD)/%.o)
@@ -13,9 +15,9 @@ OBJS := $(SRCS:%.cc=$(BUILD)/%.o)
 LIB_CXXFLAGS := -std=c++20 -fPIC -fvisibility=hidden -fvisibility-inlines-hidden \
                 -DMORRIS_ENGINE_BUILD -Iinclude -Isrc -pthread -MMD -MP
 
-.PHONY: all clean test
+.PHONY: all clean pascal test test-c test-pas
 
-all: $(LIB) $(CLI)
+all: $(LIB) $(CTEST)
 
 $(LIB): $(OBJS)
 	$(CXX) -shared -pthread -Wl,-soname,libmorris-engine.so -o $@ $^
@@ -23,14 +25,25 @@ $(LIB): $(OBJS)
 $(BUILD)/%.o: src/%.cc | $(BUILD)
 	$(CXX) $(CXXFLAGS) $(LIB_CXXFLAGS) -c -o $@ $<
 
-$(CLI): test/morris-cli.c include/morris-engine.h $(LIB)
+$(CTEST): test/morristest.c include/morris-engine.h $(LIB)
 	$(CC) $(CFLAGS) -Iinclude -o $@ $< -L$(BUILD) -lmorris-engine -Wl,-rpath,'$$ORIGIN'
 
 $(BUILD):
 	mkdir -p $@
 
-test: $(CLI)
-	./$(CLI) play 100 200
+pascal: $(PTEST)
+
+$(PTEST): test/morristest.pas morrisengine.pas ../game.pas ../log.pas ../tables.inc | $(BUILD)
+	mkdir -p $(BUILD)/units
+	$(FPC) -Mobjfpc -Sh -O2 -l- -vewn -Fu. -Fu.. -Fi.. -FU$(BUILD)/units -FE$(BUILD) -omorristest-pas $<
+
+test: test-c test-pas
+
+test-c: $(CTEST)
+	./$(CTEST) play 100 200
+
+test-pas: $(PTEST) $(LIB)
+	./$(PTEST)
 
 clean:
 	rm -rf $(BUILD)
