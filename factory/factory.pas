@@ -6,9 +6,16 @@ program factory;
 uses
   sysutils;
 
+{
+  Génère tables.inc : coordonnées, moulins et voisins des 24 points du plateau.
+  Représentation du plateau en cube 3×3×3 proposée par Philippe Guesset.
+  https://www.developpez.net/forums/showthread.php?t=2089226#post11949548
+}
+
 const
   pointcount = 24;
 
+{ Un point est repéré par (x, y, z) : x, y = direction depuis le centre, z = carré (-1 intérieur, 1 extérieur). }
 type
   axisty = (ax_x, ax_y, ax_z);
   cubety = array[-1..1, -1..1, -1..1] of integer;
@@ -18,16 +25,20 @@ var
   px, py, pz: array[0..pointcount - 1] of integer;
   count: integer;
 
+{ Le cube 3x3x3 privé de sa colonne centrale (x = y = 0). }
 function valid(const x, y, z: integer): boolean;
 begin
   result := (abs(x) <= 1) and (abs(y) <= 1) and (abs(z) <= 1) and ((x <> 0) or (y <> 0));
 end;
 
+{ Vrai pour les milieux de côté, seuls points reliés d'un carré à l'autre. }
 function crossing(const x, y: integer): boolean;
 begin
   result := (x and y) = 0;
+ {result := (x = 0) or (y = 0);}
 end;
 
+{ Numérote les points ligne par ligne sur une grille 7x7 et remplit cube, px, py, pz. }
 procedure build();
 var
   gx, gy, x, y, z, d: integer;
@@ -59,6 +70,7 @@ begin
     end;
 end;
 
+{ Voisin de i le long d'un axe, ou -1. }
 function shift(const i: integer; const axis: axisty; const delta: integer): integer;
 var
   x, y, z: integer;
@@ -77,11 +89,13 @@ begin
     result := -1;
 end;
 
+{ Les déplacements selon z ne sont possibles qu'aux milieux de côté. }
 function linked(const i: integer; const axis: axisty): boolean;
 begin
   result := (axis <> ax_z) or crossing(px[i], py[i]);
 end;
 
+{ Voisins de i, triés et complétés par -1. }
 function neighbourrow(const i: integer): string;
 var
   list: array[0..3] of integer;
@@ -114,9 +128,10 @@ begin
         list[k - 1] := list[k];
         list[k] := t;
       end;
-  result := format('(%d, %d, %d, %d)', [list[0], list[1], list[2], list[3]]);
+  result := format('(%2d, %2d, %2d, %2d)', [list[0], list[1], list[2], list[3]]);
 end;
 
+{ Les deux autres points de la ligne de trois passant par i selon un axe. }
 function millpair(const i: integer; const axis: axisty; out a, b: integer): boolean;
 var
   c, k: integer;
@@ -148,27 +163,40 @@ begin
   end;
 end;
 
+{ Les deux moulins de i, celui contenant le plus petit numéro en premier. }
 function linerow(const i: integer): string;
 var
   axis: axisty;
-  a, b: integer;
+  pairs: array[0..1, 0..1] of integer;
+  n, a, b: integer;
 begin
-  result := '';
+  n := 0;
   for axis := low(axisty) to high(axisty) do
     if millpair(i, axis, a, b) then
     begin
-      if result <> '' then
-        result := result + ', ';
-      result := result + format('%d, %d', [a, b]);
+      pairs[n, 0] := a;
+      pairs[n, 1] := b;
+      inc(n);
     end;
-  result := '(' + result + ')';
+  if pairs[0, 0] > pairs[1, 0] then
+  begin
+    a := pairs[0, 0];
+    b := pairs[0, 1];
+    pairs[0, 0] := pairs[1, 0];
+    pairs[0, 1] := pairs[1, 1];
+    pairs[1, 0] := a;
+    pairs[1, 1] := b;
+  end;
+  result := format('(%2d, %2d, %2d, %2d)', [pairs[0, 0], pairs[0, 1], pairs[1, 0], pairs[1, 1]]);
 end;
 
+{ Position du point sur la grille 7x7. }
 function coordrow(const i: integer): string;
 begin
   result := format('(%d, %d)', [4 + px[i] * (pz[i] + 2), 4 + py[i] * (pz[i] + 2)]);
 end;
 
+{ Écrit une table de constantes, trois entrées par ligne. }
 procedure writetable(const aname, atype: string; const arow: integer);
 var
   i: integer;

@@ -109,17 +109,6 @@ uses
   mseformatpngread;
 
 const
-  coords: array[0..pointcount - 1, 0..1] of integer = (
-    (1, 1), (4, 1), (7, 1),
-    (2, 2), (4, 2), (6, 2),
-    (3, 3), (4, 3), (5, 3),
-    (1, 4), (2, 4), (3, 4),
-    (5, 4), (6, 4), (7, 4),
-    (3, 5), (4, 5), (5, 5),
-    (2, 6), (4, 6), (6, 6),
-    (1, 7), (4, 7), (7, 7)
-  );
-
   playernames: array[1..2] of msestring = ('Blancs', 'Noirs');
 
   tag_startturn = 0;

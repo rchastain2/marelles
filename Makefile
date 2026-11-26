@@ -18,11 +18,15 @@ PFLAGS += -Fu$(MSELIBDIR)*
 PFLAGS += -Fu$(MSELIBDIR)kernel/$(OS)
 PFLAGS += -CX -Xs -XX -O2
 
-SOURCES := $(wildcard *.pas)
+SOURCES := $(wildcard *.pas) tables.inc
 PROGRAM := marelles
 
 $(PROGRAM): $(PROGRAM).pas $(SOURCES)
 	@$(PC) $(PFLAGS) $<
+
+tables:
+	@$(PC) -Mobjfpc -Sh -FEfactory factory/factory.pas
+	@factory/factory > tables.inc
 
 marelles.desktop:
 	@printf '%s\n' '[Desktop Entry]' 'Type=Application' 'Name=Marelles' \
@@ -37,6 +41,8 @@ install-desktop: marelles.desktop
 clean:
 	@rm -fv *.bak *.bak? *.log *.o *.ppu
 	@rm -rfv units
+	@rm -fv factory/*.o
 
 distclean: clean
 	@rm -fv $(PROGRAM) $(PROGRAM).dbg $(PROGRAM).exe
+	@rm -fv factory/factory factory/factory.exe
