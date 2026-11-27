@@ -7,7 +7,7 @@ PROGRAM := logtest
 
 all: $(PROGRAM).log
 
-$(PROGRAM): $(PROGRAM).pas ../game.pas ../computer.pas ../log.pas
+$(PROGRAM): $(PROGRAM).pas ../game.pas ../computer.pas ../logfile.pas
 	@$(PC) $(PFLAGS) $< > /dev/null
 
 $(PROGRAM).log: $(PROGRAM)

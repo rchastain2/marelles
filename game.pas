@@ -50,7 +50,7 @@ implementation
 
 uses
   sysutils,
-  log;
+  logfile;
 
 const
   playernames: array[1..2] of string = ('Blancs', 'Noirs');
@@ -77,7 +77,7 @@ end;
 procedure tgame.writelog(const aline: string);
 begin
   if not fquiet then
-    log.writelog(aline);
+    logfile.writelog(aline);
 end;
 
 procedure tgame.init();

@@ -1,4 +1,4 @@
-unit log;
+unit logfile;
 
 {$mode objfpc}{$h+}
 

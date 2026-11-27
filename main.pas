@@ -26,7 +26,7 @@ uses
   game,
   computer,
   computerthread,
-  log;
+  logfile;
 
 const
   appversion = '1.0';

@@ -33,7 +33,7 @@ $(BUILD):
 
 pascal: $(PTEST)
 
-$(PTEST): test/morristest.pas morrisengine.pas ../game.pas ../log.pas ../tables.inc | $(BUILD)
+$(PTEST): test/morristest.pas morrisengine.pas ../game.pas ../logfile.pas ../tables.inc | $(BUILD)
 	mkdir -p $(BUILD)/units
 	$(FPC) -Mobjfpc -Sh -O2 -l- -vewn -Fu. -Fu.. -Fi.. -FU$(BUILD)/units -FE$(BUILD) -omorristest-pas $<
 

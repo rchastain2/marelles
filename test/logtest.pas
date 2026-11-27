@@ -1,6 +1,6 @@
 program logtest;
 {$mode objfpc}{$h+}
-uses game, computer, log;
+uses game, computer, logfile;
 var
   g: tgame;
   a: computeractionty;
