@@ -21,7 +21,6 @@ uses
   msewidgets,
   mseforms,
   msesimplewidgets,
-  msestrings,
   msebitmap,
   mseactions,
   game,
@@ -273,10 +272,7 @@ end;
 
 function tmainfo.playerprompt(const atext: msestring): msestring;
 begin
-  if (fcomputer <> 0) and (fgame.player <> fcomputer) then
-    result := mseuppercase(copy(atext, 1, 1)) + copy(atext, 2, length(atext) - 1)
-  else
-    result := playernames[fgame.player] + ' : ' + atext;
+  result := playernames[fgame.player] + ' : ' + atext;
 end;
 
 procedure tmainfo.checkcomputer();
