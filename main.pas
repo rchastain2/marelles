@@ -30,15 +30,30 @@ uses
   morrislib;
 
 const
-  appversion = '1.0';
+  appversion = '1.1';
   cellsize = 64;
   piecesize = 48;
   containerheight = 551;
+  activeboxcolor = $E4EED8;
 
 type
   tmainfo = class(tmainform)
     board: tpaintbox;
     statuslb: tlabel;
+    whitegb: tgroupbox;
+    whitehandtx: tlabel;
+    whitehandlb: tlabel;
+    whitecounttx: tlabel;
+    whitecountlb: tlabel;
+    whitephasetx: tlabel;
+    whitephaselb: tlabel;
+    blackgb: tgroupbox;
+    blackhandtx: tlabel;
+    blackhandlb: tlabel;
+    blackcounttx: tlabel;
+    blackcountlb: tlabel;
+    blackphasetx: tlabel;
+    blackphaselb: tlabel;
     menubar: tmainmenu;
     popupitemframe: tframecomp;
     popupitemframeactive: tframecomp;
@@ -81,6 +96,7 @@ type
     function readoptions(): msestring;
     procedure initgame();
     procedure updatestatus();
+    procedure updatepanel();
     procedure clickpoint(const aindex: integer);
     procedure checkcomputer();
     procedure setcomputer(const aplayer: integer);
@@ -233,7 +249,38 @@ begin
           s := 'Vous avez gagné !';
     end;
   statuslb.caption := s;
+  updatepanel();
   playact.enabled := not (fgame.phase in [ph_remove, ph_over]) and (fthread = nil);
+end;
+
+procedure tmainfo.updatepanel();
+
+  function phasename(const aplayer: integer): msestring;
+  begin
+    if fgame.phase = ph_over then
+      result := 'terminée'
+    else if fgame.hand[aplayer] > 0 then
+      result := 'pose'
+    else if fgame.mayjump(aplayer) then
+      result := 'vol'
+    else
+      result := 'déplacement';
+  end;
+
+  procedure update(const aplayer: integer; const abox: tgroupbox; const ahand, acount, aphase: tlabel);
+  begin
+    if (aplayer = fgame.player) and (fgame.phase <> ph_over) then
+      abox.color := activeboxcolor
+    else
+      abox.color := cl_default;
+    ahand.caption := msestring(inttostr(fgame.hand[aplayer]));
+    acount.caption := msestring(inttostr(fgame.countpieces(aplayer)));
+    aphase.caption := phasename(aplayer);
+  end;
+
+begin
+  update(1, whitegb, whitehandlb, whitecountlb, whitephaselb);
+  update(2, blackgb, blackhandlb, blackcountlb, blackphaselb);
 end;
 
 function tmainfo.pointcenter(const aindex: integer): pointty;
