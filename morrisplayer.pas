@@ -89,7 +89,7 @@ begin
   result.source := -1;
   result.target := -1;
   result.capture := -1;
-  if (fengine = nil) or fstop or (agame.phase = ph_remove) then
+  if (fengine = nil) or fstop then
     exit;
   for i := 0 to morrispoints - 1 do
     points[i] := agame.points[i];

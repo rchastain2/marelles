@@ -233,7 +233,7 @@ begin
           s := 'Vous avez gagné !';
     end;
   statuslb.caption := s;
-  playact.enabled := (fgame.phase <> ph_over) and (fthread = nil);
+  playact.enabled := not (fgame.phase in [ph_remove, ph_over]) and (fthread = nil);
 end;
 
 function tmainfo.pointcenter(const aindex: integer): pointty;
@@ -459,7 +459,7 @@ end;
 procedure tmainfo.playev(const sender: TObject);
 begin
   writelog('Commande Jouer');
-  if (fgame.phase = ph_over) or (fthread <> nil) then
+  if (fgame.phase in [ph_remove, ph_over]) or (fthread <> nil) then
     exit;
   if autoplayact.checked then
   begin

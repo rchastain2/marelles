@@ -16,7 +16,6 @@ type
   enginety = (en_builtin, en_morris);
 
 function setengine(const aengine: enginety): boolean;
-function currentengine(): enginety;
 procedure setthinkingtime(const amsec: integer);
 function thinkingtime(): integer;
 function enginename(): unicodestring;
@@ -41,12 +40,8 @@ begin
   if (aengine = en_morris) and not morrisplayer.loadengine() then
     exit(false);
   fengine := aengine;
+  setthinkingtime(fthinkingtime);
   result := true;
-end;
-
-function currentengine(): enginety;
-begin
-  result := fengine;
 end;
 
 procedure setthinkingtime(const amsec: integer);
@@ -57,8 +52,12 @@ begin
     fthinkingtime := maxthinkingtime
   else
     fthinkingtime := amsec;
-  alea.setthinkingtime(fthinkingtime);
-  morrisplayer.setthinkingtime(fthinkingtime);
+  case fengine of
+    en_morris:
+      morrisplayer.setthinkingtime(fthinkingtime);
+  else
+    alea.setthinkingtime(fthinkingtime);
+  end;
 end;
 
 function thinkingtime(): integer;
@@ -88,28 +87,42 @@ end;
 
 procedure newgame();
 begin
-  alea.newgame();
-  morrisplayer.newgame();
+  case fengine of
+    en_morris:
+      morrisplayer.newgame();
+  else
+    alea.newgame();
+  end;
 end;
 
 procedure preparethinking();
 begin
-  alea.preparethinking();
-  morrisplayer.preparethinking();
+  case fengine of
+    en_morris:
+      morrisplayer.preparethinking();
+  else
+    alea.preparethinking();
+  end;
 end;
 
 procedure abortthinking();
 begin
-  alea.abortthinking();
-  morrisplayer.abortthinking();
+  case fengine of
+    en_morris:
+      morrisplayer.abortthinking();
+  else
+    alea.abortthinking();
+  end;
 end;
 
 function chooseturn(const agame: tgame): turnty;
 begin
-  if (fengine = en_morris) and (agame.phase <> ph_remove) then
-    result := morrisplayer.chooseturn(agame)
+  case fengine of
+    en_morris:
+      result := morrisplayer.chooseturn(agame);
   else
     result := alea.chooseturn(agame);
+  end;
 end;
 
 end.

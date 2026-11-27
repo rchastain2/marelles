@@ -98,9 +98,8 @@ Le type `turnty` est déclaré dans `game.pas`. La fonction reçoit une copie de
 |---|---|---|---|
 | `ph_place` | inutilisé (-1) | point libre où poser | pion à prendre si la pose ferme un moulin, sinon -1 |
 | `ph_move` | pion à déplacer | point d'arrivée | pion à prendre si le déplacement ferme un moulin, sinon -1 |
-| `ph_remove` | inutilisé (-1) | pion adverse à prendre | inutilisé (-1) |
 
-La phase `ph_remove` au début du tour se présente quand le joueur, après avoir fermé un moulin, demande « Jouer » : l'ordinateur ne choisit alors que la prise. *Morris Engine* ne sait pas traiter ce cas (il calcule toujours un coup complet) : la prise est alors choisie par *Aléa*.
+La fonction n'est jamais appelée en phase `ph_remove` : le joueur qui ferme un moulin choisit lui-même la prise, et la commande « Jouer » est désactivée pendant cette phase.
 
 Quelques règles :
 
@@ -136,7 +135,7 @@ Le calcul se fait dans un thread, défini dans `computerthread.pas`, pour que la
 2. le thread appelle `chooseturn`, puis prévient la fenêtre par un événement asynchrone ;
 3. `finishturn` joue le tour dans le fil principal, avec `tgame`, ce qui l'écrit dans le journal.
 
-Une nouvelle partie, un changement de la réponse automatique ou la fermeture de la fenêtre interrompent le calcul (`stopthinking`) : `abortthinking` (dans `computer.pas`, qui le transmet aux deux moteurs) arrête la pause d'*Aléa* ou la recherche de *Morris* (`morris_stop`), le thread est prévenu par `terminate`, et la fenêtre attend sa fin. L'indicateur d'arrêt est remis à zéro par `preparethinking`, à la création du thread.
+Une nouvelle partie, un changement de la réponse automatique ou la fermeture de la fenêtre interrompent le calcul (`stopthinking`) : `abortthinking` (transmis par `computer.pas` au moteur choisi) arrête la pause d'*Aléa* ou la recherche de *Morris* (`morris_stop`), le thread est prévenu par `terminate`, et la fenêtre attend sa fin. L'indicateur d'arrêt est remis à zéro par `preparethinking`, à la création du thread.
 
 Trois points à respecter dans le moteur :
 
