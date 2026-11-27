@@ -1,4 +1,4 @@
-unit engine;
+unit engineclass;
 
 {$mode objfpc}{$h+}
 

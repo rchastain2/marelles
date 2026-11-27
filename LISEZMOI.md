@@ -70,12 +70,12 @@ Deux adversaires sont disponibles, au choix sur la ligne de commande :
 | Option | Effet |
 |---|---|
 | `--engine=builtin` | *Aléa 0.1* (par défaut) : joue une action légale au hasard, après une pause qui simule la réflexion |
-| `--engine=morris` | *Morris 0.4*, par la bibliothèque *morris-engine* : recherche alpha-bêta |
+| `--engine=morris` | *Morris 0.4*, par la bibliothèque *morris* : recherche alpha-bêta |
 | `--time=<ms>` | temps de réflexion, de 10 à 600000 ms (1500 par défaut) : la pause d'*Aléa*, le temps de recherche de *Morris* |
 
-Si la bibliothèque *morris-engine* ne peut pas être chargée, *Aléa* la remplace, et la ligne d'état le signale. `make engine` compile la bibliothèque et la copie à côté de l'exécutable, où elle est cherchée en premier (puis dans les chemins du système).
+Si la bibliothèque *morris* ne peut pas être chargée, *Aléa* la remplace, et la ligne d'état le signale. `make engine` compile la bibliothèque et la copie à côté de l'exécutable, où elle est cherchée en premier (puis dans les chemins du système).
 
-Chaque adversaire est une classe qui descend de la classe abstraite `tengine`, déclarée dans `engine.pas` :
+Chaque adversaire est une classe qui descend de la classe abstraite `tengine`, déclarée dans `engineclass.pas` :
 
 ```pascal
 tengine = class
@@ -95,7 +95,7 @@ end;
 La classe de base garde le temps de réflexion et l'indicateur d'arrêt. Un moteur doit au moins définir `name`, qui renvoie son nom complet (nom et version), et `chooseturn` :
 
 - `taleaengine`, dans `alea.pas`, pour *Aléa*, ne définit que ces deux méthodes ;
-- `tmorrisengine`, dans `morrisengine.pas`, pour *Morris*, redéfinit aussi `setthinkingtime`, `newgame` et `abortthinking` pour appeler la bibliothèque, par la liaison `morris-engine/morrislib.pas`. On le crée par `createengine`, qui renvoie `nil` si la bibliothèque est absente.
+- `tmorrisengine`, dans `morris.pas`, pour *Morris*, redéfinit aussi `setthinkingtime`, `newgame` et `abortthinking` pour appeler la bibliothèque, par la liaison `morris/morrislib.pas`. On le crée par `createengine`, qui renvoie `nil` si la bibliothèque est absente.
 
 L'unité `computer.pas` ne fait qu'aiguiller : `setengine` crée le moteur choisi, et les autres fonctions transmettent chaque appel à l'objet en place. C'est la seule unité que connaissent la fenêtre et le thread de calcul. Pour ajouter un adversaire, il suffit d'écrire une classe qui descend de `tengine`, d'ajouter une valeur à `enginety` et sa création dans `setengine`. Le nom et la version de l'adversaire apparaissent dans le journal, dans la ligne d'état et dans la boîte « À propos ». Le reste (menus, thread de calcul, enchaînement du tour, journal) n'a pas à changer.
 

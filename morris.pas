@@ -1,4 +1,4 @@
-unit morrisengine;
+unit morris;
 
 {$mode objfpc}{$h+}
 
@@ -6,7 +6,7 @@ interface
 
 uses
   game,
-  engine,
+  engineclass,
   morrislib;
 
 type

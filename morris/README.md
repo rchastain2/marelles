@@ -1,4 +1,4 @@
-# morris-engine
+# morris
 
 Bibliothèque dynamique exposant, sous une interface C, le moteur de jeu de [Morris 0.4](https://github.com/farindk/morris) de Dirk Farin (recherche alpha-bêta NegaMax, approfondissement itératif, table de transposition). Règles du jeu de marelle standard à neuf pièces : vol à trois pièces, une seule prise par coup, prise dans un moulin seulement si toutes les pièces adverses sont dans des moulins.
 
@@ -10,11 +10,11 @@ Licence : GPL v3 (voir `COPYING`), comme Morris.
 make
 ```
 
-Produit `build/libmorris-engine.so` et le programme de test `build/morristest-c`. Nécessite un compilateur C++20 (GCC 10 ou plus récent). `make clean` supprime le dossier `build`.
+Produit `build/libmorris.so` et le programme de test `build/morristest-c`. Nécessite un compilateur C++20 (GCC 10 ou plus récent). `make clean` supprime le dossier `build`.
 
 ## Interface
 
-Voir `include/morris-engine.h`. Convention de *Marelles* : points numérotés de 0 à 23 ligne par ligne, `0` vide, `1` Blancs, `2` Noirs.
+Voir `include/morris.h`. Convention de *Marelles* : points numérotés de 0 à 23 ligne par ligne, `0` vide, `1` Blancs, `2` Noirs.
 
 | Fonction | Rôle |
 |---|---|

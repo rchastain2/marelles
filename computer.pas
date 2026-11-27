@@ -27,9 +27,9 @@ function chooseturn(const agame: tgame): turnty;
 implementation
 
 uses
-  engine,
+  engineclass,
   alea,
-  morrisengine;
+  morris;
 
 var
   fengine: tengine = nil;

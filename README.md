@@ -61,10 +61,10 @@ Two computer opponents are available, selected on the command line:
 | Option | Effect |
 |---|---|
 | `--engine=builtin` | *Aléa 0.1* (default): plays a random legal action after a pause that simulates thinking |
-| `--engine=morris` | *Morris 0.4*, through the *morris-engine* library: alpha-beta search |
+| `--engine=morris` | *Morris 0.4*, through the *morris* library: alpha-beta search |
 | `--time=<ms>` | thinking time, from 10 to 600000 ms (1500 by default): the pause of *Aléa*, the search time of *Morris* |
 
-If the *morris-engine* library cannot be loaded, *Aléa* is used instead and the status line says so.
+If the *morris* library cannot be loaded, *Aléa* is used instead and the status line says so.
 
 ## Building
 
@@ -85,7 +85,7 @@ make MSEDIR=/path/to/mseide-msegui/
 
 Or open *marelles.prj* in MSEide.
 
-To use the *Morris* opponent, build the *morris-engine* library (C++20 compiler required) and copy it next to the executable:
+To use the *Morris* opponent, build the *morris* library (C++20 compiler required) and copy it next to the executable:
 
 ```Bash
 make engine

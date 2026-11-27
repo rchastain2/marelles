@@ -16,9 +16,9 @@ const
   morris_error = -3;
 
 {$ifdef windows}
-  morrislibname = 'morris-engine.dll';
+  morrislibname = 'morris.dll';
 {$else}
-  morrislibname = 'libmorris-engine.so';
+  morrislibname = 'libmorris.so';
 {$endif}
 
 type

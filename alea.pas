@@ -6,7 +6,7 @@ interface
 
 uses
   game,
-  engine;
+  engineclass;
 
 type
   actionty = record

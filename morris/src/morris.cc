@@ -1,4 +1,4 @@
-#include "morris-engine.h"
+#include "morris.h"
 
 #include "algo_alphabeta.hh"
 #include "rules.hh"

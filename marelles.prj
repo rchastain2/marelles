@@ -261,7 +261,7 @@ unitdirs=5
  ${MSELIBDIR}kernel/$TARGETOSDIR/
  ${MSELIBDIR}kernel/
  ${MSELIBDIR}*/
- ./morris-engine/
+ ./morris/
 unitpref=-Fu
 incpref=-Fi
 libpref=-Fl

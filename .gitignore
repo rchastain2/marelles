@@ -15,5 +15,5 @@ mseide-msegui/
 programmes.txt
 
 factory/factory
-morris-engine/build/
-libmorris-engine.so
+morris/build/
+libmorris.so
