@@ -19,7 +19,7 @@ PFLAGS += -Fu$(MSELIBDIR)kernel/$(OS)
 PFLAGS += -Fumorris-engine
 PFLAGS += -CX -Xs -XX -O2
 
-SOURCES := $(wildcard *.pas) morris-engine/morrisengine.pas tables.inc
+SOURCES := $(wildcard *.pas) morris-engine/morrislib.pas tables.inc
 PROGRAM := marelles
 
 $(PROGRAM): $(PROGRAM).pas $(SOURCES)

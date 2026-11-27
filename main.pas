@@ -27,7 +27,7 @@ uses
   computer,
   computerthread,
   logfile,
-  morrisengine;
+  morrislib;
 
 const
   appversion = '1.0';

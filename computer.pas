@@ -29,7 +29,7 @@ implementation
 uses
   engine,
   alea,
-  morrisplayer;
+  morrisengine;
 
 var
   fengine: tengine = nil;
@@ -41,7 +41,7 @@ var
 begin
   case aengine of
     en_morris:
-      e := tmorrisplayer.createengine();
+      e := tmorrisengine.createengine();
   else
     e := taleaengine.create();
   end;

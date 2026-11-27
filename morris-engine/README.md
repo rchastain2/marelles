@@ -29,7 +29,7 @@ Voir `include/morris-engine.h`. Convention de *Marelles* : points numérotés de
 
 ## Liaison Pascal
 
-L'unité `morrisengine.pas` charge la bibliothèque dynamiquement (`loadmorrisengine`), d'abord dans le dossier de l'exécutable, puis dans les chemins du système. Elle renvoie `false` si la bibliothèque est absente ou incomplète.
+L'unité `morrislib.pas` charge la bibliothèque dynamiquement (`loadmorrisengine`), d'abord dans le dossier de l'exécutable, puis dans les chemins du système. Elle renvoie `false` si la bibliothèque est absente ou incomplète.
 
 ## Tests
 

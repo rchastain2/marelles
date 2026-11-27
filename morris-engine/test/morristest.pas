@@ -10,7 +10,7 @@ uses
   classes,
   ctypes,
   game,
-  morrisengine;
+  morrislib;
 
 const
   maxplies = 300;

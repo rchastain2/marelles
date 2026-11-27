@@ -1,4 +1,4 @@
-unit morrisplayer;
+unit morrisengine;
 
 {$mode objfpc}{$h+}
 
@@ -7,15 +7,15 @@ interface
 uses
   game,
   engine,
-  morrisengine;
+  morrislib;
 
 type
-  tmorrisplayer = class(tengine)
+  tmorrisengine = class(tengine)
   private
     fengine: pmorrisengine;
   public
     constructor create(const aengine: pmorrisengine);
-    class function createengine(): tmorrisplayer;
+    class function createengine(): tmorrisengine;
     destructor destroy(); override;
     function name(): unicodestring; override;
     procedure setthinkingtime(const amsec: integer); override;
@@ -29,7 +29,7 @@ implementation
 uses
   ctypes;
 
-class function tmorrisplayer.createengine(): tmorrisplayer;
+class function tmorrisengine.createengine(): tmorrisengine;
 var
   e: pmorrisengine;
 begin
@@ -38,45 +38,45 @@ begin
     exit;
   e := morris_create();
   if e <> nil then
-    result := tmorrisplayer.create(e);
+    result := tmorrisengine.create(e);
 end;
 
-constructor tmorrisplayer.create(const aengine: pmorrisengine);
+constructor tmorrisengine.create(const aengine: pmorrisengine);
 begin
   inherited create();
   fengine := aengine;
   morris_set_time(fengine, fthinkingtime);
 end;
 
-destructor tmorrisplayer.destroy();
+destructor tmorrisengine.destroy();
 begin
   morris_destroy(fengine);
   inherited;
 end;
 
-function tmorrisplayer.name(): unicodestring;
+function tmorrisengine.name(): unicodestring;
 begin
   result := unicodestring(utf8string(morris_name())) + ' ' + unicodestring(utf8string(morris_version()));
 end;
 
-procedure tmorrisplayer.setthinkingtime(const amsec: integer);
+procedure tmorrisengine.setthinkingtime(const amsec: integer);
 begin
   inherited;
   morris_set_time(fengine, fthinkingtime);
 end;
 
-procedure tmorrisplayer.newgame();
+procedure tmorrisengine.newgame();
 begin
   morris_new_game(fengine);
 end;
 
-procedure tmorrisplayer.abortthinking();
+procedure tmorrisengine.abortthinking();
 begin
   inherited;
   morris_stop(fengine);
 end;
 
-function tmorrisplayer.chooseturn(const agame: tgame): turnty;
+function tmorrisengine.chooseturn(const agame: tgame): turnty;
 var
   points: tmorrispoints;
   i: integer;

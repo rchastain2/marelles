@@ -1,4 +1,4 @@
-unit morrisengine;
+unit morrislib;
 
 {$mode objfpc}{$h+}
 
