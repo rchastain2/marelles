@@ -1,9 +1,9 @@
 program logtest;
 {$mode objfpc}{$h+}
-uses game, computer, logfile;
+uses game, alea, logfile;
 var
   g: tgame;
-  a: computeractionty;
+  a: actionty;
   n: integer;
 begin
   randseed := 12345;

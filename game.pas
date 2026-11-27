@@ -13,6 +13,12 @@ const
 type
   phasety = (ph_place, ph_move, ph_remove, ph_over);
 
+  turnty = record
+    source: integer;
+    target: integer;
+    capture: integer;
+  end;
+
   tgame = class
   private
     fpoints: array[0..pointcount - 1] of integer;

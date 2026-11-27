@@ -75,22 +75,24 @@ Deux adversaires sont disponibles, au choix sur la ligne de commande :
 
 Si la bibliothèque *morris-engine* ne peut pas être chargée, *Aléa* la remplace, et la ligne d'état le signale. `make engine` compile la bibliothèque et la copie à côté de l'exécutable, où elle est cherchée en premier (puis dans les chemins du système).
 
-Tout ce qui concerne les adversaires est dans `computer.pas` : choix du moteur (`setengine`), temps de réflexion (`setthinkingtime`), nom et description (`enginename`, `enginefullname`, `enginedescription`), et la fonction `chooseturn`, qui aiguille vers l'un ou l'autre moteur. Pour ajouter un adversaire, il suffit d'y ajouter une valeur à `enginety` et la branche correspondante. Le nom et la version de l'adversaire apparaissent dans le journal, dans la ligne d'état et dans la boîte « À propos ». Le reste (menus, thread de calcul, enchaînement du tour, journal) n'a pas à changer.
+Chaque adversaire a son unité : `alea.pas` pour *Aléa*, `morrisplayer.pas` pour *Morris* (qui s'appuie sur la liaison `morris-engine/morrisengine.pas`). Les deux offrent la même petite interface : `enginename`, `engineversion`, `setthinkingtime`, `newgame`, `preparethinking`, `abortthinking` et `chooseturn`.
+
+L'unité `computer.pas` ne fait qu'aiguiller : elle garde le moteur choisi (`setengine`) et le temps de réflexion (`setthinkingtime`), et transmet chaque appel au moteur choisi. C'est la seule que connaissent la fenêtre et le thread de calcul. Pour ajouter un adversaire, il suffit d'écrire son unité sur le même modèle, d'ajouter une valeur à `enginety` et les branches correspondantes dans `computer.pas`. Le nom et la version de l'adversaire apparaissent dans le journal, dans la ligne d'état et dans la boîte « À propos ». Le reste (menus, thread de calcul, enchaînement du tour, journal) n'a pas à changer.
 
 ### Le contrat de `chooseturn`
 
 ```pascal
 type
-  computerturnty = record
+  turnty = record
     source: integer;
     target: integer;
     capture: integer;
   end;
 
-function chooseturn(const agame: tgame): computerturnty;
+function chooseturn(const agame: tgame): turnty;
 ```
 
-La fonction reçoit une copie de la partie et renvoie **le tour complet** de l'ordinateur :
+Le type `turnty` est déclaré dans `game.pas`. La fonction reçoit une copie de la partie et renvoie **le tour complet** de l'ordinateur :
 
 | Phase au début du tour | `source` | `target` | `capture` |
 |---|---|---|---|
@@ -106,7 +108,7 @@ Quelques règles :
 - les actions renvoyées doivent être **légales**. Une action refusée par `tgame` laisse le tour inachevé ; en réponse automatique, l'ordinateur relance alors son calcul, ce qui peut tourner en rond ;
 - `target = -1` signifie « aucune action possible ». Cela ne devrait pas arriver, puisque la partie se termine dès qu'un joueur ne peut plus bouger.
 
-La fonction `chooseaction`, qui choisit une seule action au hasard, sert à `chooseturn` et au programme de test.
+La fonction `chooseaction` d'`alea.pas`, qui choisit une seule action au hasard, sert au `chooseturn` d'*Aléa* et au programme de test.
 
 ### Ce que `tgame` met à disposition
 
@@ -134,7 +136,7 @@ Le calcul se fait dans un thread, défini dans `computerthread.pas`, pour que la
 2. le thread appelle `chooseturn`, puis prévient la fenêtre par un événement asynchrone ;
 3. `finishturn` joue le tour dans le fil principal, avec `tgame`, ce qui l'écrit dans le journal.
 
-Une nouvelle partie, un changement de la réponse automatique ou la fermeture de la fenêtre interrompent le calcul (`stopthinking`) : `abortthinking` (dans `computer.pas`) arrête la pause d'*Aléa* ou la recherche de *Morris* (`morris_stop`), le thread est prévenu par `terminate`, et la fenêtre attend sa fin. L'indicateur d'arrêt est remis à zéro par `preparethinking`, à la création du thread.
+Une nouvelle partie, un changement de la réponse automatique ou la fermeture de la fenêtre interrompent le calcul (`stopthinking`) : `abortthinking` (dans `computer.pas`, qui le transmet aux deux moteurs) arrête la pause d'*Aléa* ou la recherche de *Morris* (`morris_stop`), le thread est prévenu par `terminate`, et la fenêtre attend sa fin. L'indicateur d'arrêt est remis à zéro par `preparethinking`, à la création du thread.
 
 Trois points à respecter dans le moteur :
 
@@ -142,7 +144,7 @@ Trois points à respecter dans le moteur :
 - **ne toucher ni à la fenêtre, ni à la vraie partie** : tout passe par la copie reçue et par le résultat renvoyé ;
 - **savoir s'interrompre** : une longue recherche doit tester régulièrement l'indicateur d'arrêt positionné par `abortthinking`, sans quoi la fenêtre reste bloquée jusqu'à la fin du calcul quand on l'interrompt.
 
-La fonction `thinkingdelay` de `computer.pas` fait la pause d'*Aléa*, de la durée donnée par `--time`, en s'interrompant dès que `abortthinking` est appelé.
+La fonction `thinkingdelay` d'`alea.pas` fait la pause d'*Aléa*, de la durée donnée par `--time`, en s'interrompant dès que `abortthinking` est appelé.
 
 ### Mesurer la force du nouvel adversaire
 

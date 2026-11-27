@@ -16,14 +16,14 @@ type
     fgame: tgame;
     fclient: tmsecomponent;
     ftag: integer;
-    fturn: computerturnty;
+    fturn: turnty;
     fdone: boolean;
   protected
     function execute(thread: tmsethread): integer; override;
   public
     constructor create(const agame: tgame; const aclient: tmsecomponent; const atag: integer); reintroduce;
     destructor destroy(); override;
-    property turn: computerturnty read fturn;
+    property turn: turnty read fturn;
     property done: boolean read fdone;
   end;
 

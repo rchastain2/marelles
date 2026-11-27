@@ -343,7 +343,7 @@ end;
 
 procedure tmainfo.finishturn();
 var
-  t: computerturnty;
+  t: turnty;
 begin
   if (fthread = nil) or not fthread.done then
     exit;
@@ -492,7 +492,7 @@ begin
   showmessage(
     'Marelles ' + appversion + lineend + lineend +
     'Compilé le ' + {$i %date%} + ' avec FPC ' + {$i %fpcversion%} + ' et MSEgui ' + mseguiversiontext + '.' + lineend + lineend +
-    'Adversaire : ' + enginefullname + ', qui ' + enginedescription + '.',
+    'Adversaire : ' + enginefullname + ', temps de réflexion : ' + msestring(inttostr(thinkingtime)) + ' ms.',
     'À propos'
   );
 end;
