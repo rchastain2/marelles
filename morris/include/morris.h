@@ -37,10 +37,13 @@ MORRIS_API void           morris_set_time(morris_engine* engine, int msec);
 MORRIS_API void           morris_set_depth(morris_engine* engine, int depth);
 MORRIS_API void           morris_stop(morris_engine* engine);
 
+/* points: 0 to 23, row by row from the top left corner (diagram in README.md);
+   0 empty, 1 white, 2 black. hand_*: pieces still to place. side: 1 or 2.
+   source: -1 for a placement; capture: -1 if no piece is taken. */
 MORRIS_API int            morris_choose(morris_engine* engine,
-                                               const int points[MORRIS_POINTS],
-                                               int hand_white, int hand_black, int side,
-                                               int* source, int* target, int* capture);
+                                        const int points[MORRIS_POINTS],
+                                        int hand_white, int hand_black, int side,
+                                        int* source, int* target, int* capture);
 
 #ifdef __cplusplus
 }

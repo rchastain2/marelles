@@ -16,6 +16,22 @@ Produit `build/libmorris.so` et le programme de test `build/morristest-c`. Néce
 
 Voir `include/morris.h`. Convention de *Marelles* : points numérotés de 0 à 23 ligne par ligne, `0` vide, `1` Blancs, `2` Noirs.
 
+```
+ 0-----------1-----------2
+ |           |           |
+ |   3-------4-------5   |
+ |   |       |       |   |
+ |   |   6---7---8   |   |
+ |   |   |       |   |   |
+ 9--10--11      12--13--14
+ |   |   |       |   |   |
+ |   |  15--16--17   |   |
+ |   |       |       |   |
+ |  18------19------20   |
+ |           |           |
+21----------22----------23
+```
+
 | Fonction | Rôle |
 |---|---|
 | `morris_create` / `morris_destroy` | crée / détruit un moteur (chacun a sa table de transposition) |
