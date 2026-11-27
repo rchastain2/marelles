@@ -1,86 +1,88 @@
 unit morrisplayer;
 
-{$mode objfpc}{$h+}{$codepage utf8}
+{$mode objfpc}{$h+}
 
 interface
 
 uses
-  game;
+  game,
+  engine,
+  morrisengine;
 
-function loadengine(): boolean;
-function enginename(): unicodestring;
-function engineversion(): unicodestring;
-procedure setthinkingtime(const amsec: integer);
-procedure newgame();
-procedure preparethinking();
-procedure abortthinking();
-function chooseturn(const agame: tgame): turnty;
+type
+  tmorrisplayer = class(tengine)
+  private
+    fengine: pmorrisengine;
+  public
+    constructor create(const aengine: pmorrisengine);
+    class function createengine(): tmorrisplayer;
+    destructor destroy(); override;
+    function name(): unicodestring; override;
+    function version(): unicodestring; override;
+    procedure setthinkingtime(const amsec: integer); override;
+    procedure newgame(); override;
+    procedure abortthinking(); override;
+    function chooseturn(const agame: tgame): turnty; override;
+  end;
 
 implementation
 
 uses
-  ctypes,
-  morrisengine;
+  ctypes;
 
+class function tmorrisplayer.createengine(): tmorrisplayer;
 var
-  fengine: pmorrisengine = nil;
-  fthinkingtime: integer = 1500;
-  fstop: boolean = false;
-
-function loadengine(): boolean;
+  e: pmorrisengine;
 begin
-  if fengine = nil then
-  begin
-    if loadmorrisengine() then
-      fengine := morris_create();
-    if fengine <> nil then
-      morris_set_time(fengine, fthinkingtime);
-  end;
-  result := fengine <> nil;
+  result := nil;
+  if not loadmorrisengine() then
+    exit;
+  e := morris_create();
+  if e <> nil then
+    result := tmorrisplayer.create(e);
 end;
 
-function enginename(): unicodestring;
+constructor tmorrisplayer.create(const aengine: pmorrisengine);
 begin
-  if fengine = nil then
-    result := 'Morris'
-  else
-    result := unicodestring(utf8string(morris_name()));
+  inherited create();
+  fengine := aengine;
+  morris_set_time(fengine, fthinkingtime);
 end;
 
-function engineversion(): unicodestring;
+destructor tmorrisplayer.destroy();
 begin
-  if fengine = nil then
-    result := ''
-  else
-    result := unicodestring(utf8string(morris_version()));
+  morris_destroy(fengine);
+  inherited;
 end;
 
-procedure setthinkingtime(const amsec: integer);
+function tmorrisplayer.name(): unicodestring;
 begin
-  fthinkingtime := amsec;
-  if fengine <> nil then
-    morris_set_time(fengine, fthinkingtime);
+  result := unicodestring(utf8string(morris_name()));
 end;
 
-procedure newgame();
+function tmorrisplayer.version(): unicodestring;
 begin
-  if fengine <> nil then
-    morris_new_game(fengine);
+  result := unicodestring(utf8string(morris_version()));
 end;
 
-procedure preparethinking();
+procedure tmorrisplayer.setthinkingtime(const amsec: integer);
 begin
-  fstop := false;
+  inherited;
+  morris_set_time(fengine, fthinkingtime);
 end;
 
-procedure abortthinking();
+procedure tmorrisplayer.newgame();
 begin
-  fstop := true;
-  if fengine <> nil then
-    morris_stop(fengine);
+  morris_new_game(fengine);
 end;
 
-function chooseturn(const agame: tgame): turnty;
+procedure tmorrisplayer.abortthinking();
+begin
+  inherited;
+  morris_stop(fengine);
+end;
+
+function tmorrisplayer.chooseturn(const agame: tgame): turnty;
 var
   points: tmorrispoints;
   i: integer;
@@ -89,7 +91,7 @@ begin
   result.source := -1;
   result.target := -1;
   result.capture := -1;
-  if (fengine = nil) or fstop then
+  if fstop then
     exit;
   for i := 0 to morrispoints - 1 do
     points[i] := agame.points[i];
@@ -101,7 +103,4 @@ begin
   end;
 end;
 
-finalization
-  if fengine <> nil then
-    morris_destroy(fengine);
 end.

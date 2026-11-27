@@ -75,9 +75,30 @@ Deux adversaires sont disponibles, au choix sur la ligne de commande :
 
 Si la bibliothèque *morris-engine* ne peut pas être chargée, *Aléa* la remplace, et la ligne d'état le signale. `make engine` compile la bibliothèque et la copie à côté de l'exécutable, où elle est cherchée en premier (puis dans les chemins du système).
 
-Chaque adversaire a son unité : `alea.pas` pour *Aléa*, `morrisplayer.pas` pour *Morris* (qui s'appuie sur la liaison `morris-engine/morrisengine.pas`). Les deux offrent la même petite interface : `enginename`, `engineversion`, `setthinkingtime`, `newgame`, `preparethinking`, `abortthinking` et `chooseturn`.
+Chaque adversaire est une classe qui descend de la classe abstraite `tengine`, déclarée dans `engine.pas` :
 
-L'unité `computer.pas` ne fait qu'aiguiller : elle garde le moteur choisi (`setengine`) et le temps de réflexion (`setthinkingtime`), et transmet chaque appel au moteur choisi. C'est la seule que connaissent la fenêtre et le thread de calcul. Pour ajouter un adversaire, il suffit d'écrire son unité sur le même modèle, d'ajouter une valeur à `enginety` et les branches correspondantes dans `computer.pas`. Le nom et la version de l'adversaire apparaissent dans le journal, dans la ligne d'état et dans la boîte « À propos ». Le reste (menus, thread de calcul, enchaînement du tour, journal) n'a pas à changer.
+```pascal
+tengine = class
+protected
+  fthinkingtime: integer;
+  fstop: boolean;
+public
+  function name(): unicodestring; virtual; abstract;
+  function version(): unicodestring; virtual; abstract;
+  procedure setthinkingtime(const amsec: integer); virtual;
+  procedure newgame(); virtual;
+  procedure preparethinking(); virtual;
+  procedure abortthinking(); virtual;
+  function chooseturn(const agame: tgame): turnty; virtual; abstract;
+end;
+```
+
+La classe de base garde le temps de réflexion et l'indicateur d'arrêt. Un moteur doit au moins définir `name`, `version` et `chooseturn` :
+
+- `taleaengine`, dans `alea.pas`, pour *Aléa*, ne définit que ces trois méthodes ;
+- `tmorrisplayer`, dans `morrisplayer.pas`, pour *Morris*, redéfinit aussi `setthinkingtime`, `newgame` et `abortthinking` pour appeler la bibliothèque, par la liaison `morris-engine/morrisengine.pas`. On le crée par `createengine`, qui renvoie `nil` si la bibliothèque est absente.
+
+L'unité `computer.pas` ne fait qu'aiguiller : `setengine` crée le moteur choisi, et les autres fonctions transmettent chaque appel à l'objet en place. C'est la seule unité que connaissent la fenêtre et le thread de calcul. Pour ajouter un adversaire, il suffit d'écrire une classe qui descend de `tengine`, d'ajouter une valeur à `enginety` et sa création dans `setengine`. Le nom et la version de l'adversaire apparaissent dans le journal, dans la ligne d'état et dans la boîte « À propos ». Le reste (menus, thread de calcul, enchaînement du tour, journal) n'a pas à changer.
 
 ### Le contrat de `chooseturn`
 
@@ -143,7 +164,7 @@ Trois points à respecter dans le moteur :
 - **ne toucher ni à la fenêtre, ni à la vraie partie** : tout passe par la copie reçue et par le résultat renvoyé ;
 - **savoir s'interrompre** : une longue recherche doit tester régulièrement l'indicateur d'arrêt positionné par `abortthinking`, sans quoi la fenêtre reste bloquée jusqu'à la fin du calcul quand on l'interrompt.
 
-La fonction `thinkingdelay` d'`alea.pas` fait la pause d'*Aléa*, de la durée donnée par `--time`, en s'interrompant dès que `abortthinking` est appelé.
+La méthode `thinkingdelay` de `taleaengine` fait la pause d'*Aléa*, de la durée donnée par `--time`, en s'interrompant dès que `abortthinking` est appelé.
 
 ### Mesurer la force du nouvel adversaire
 

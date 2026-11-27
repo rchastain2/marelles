@@ -5,7 +5,8 @@ unit alea;
 interface
 
 uses
-  game;
+  game,
+  engine;
 
 type
   actionty = record
@@ -13,52 +14,21 @@ type
     target: integer;
   end;
 
-function enginename(): unicodestring;
-function engineversion(): unicodestring;
-procedure setthinkingtime(const amsec: integer);
-procedure newgame();
-procedure preparethinking();
-procedure abortthinking();
+  taleaengine = class(tengine)
+  private
+    function thinkingdelay(): boolean;
+  public
+    function name(): unicodestring; override;
+    function version(): unicodestring; override;
+    function chooseturn(const agame: tgame): turnty; override;
+  end;
+
 function chooseaction(const agame: tgame): actionty;
-function chooseturn(const agame: tgame): turnty;
 
 implementation
 
 uses
   sysutils;
-
-var
-  fthinkingtime: integer = 1500;
-  fstop: boolean = false;
-
-function enginename(): unicodestring;
-begin
-  result := 'Aléa';
-end;
-
-function engineversion(): unicodestring;
-begin
-  result := '0.1';
-end;
-
-procedure setthinkingtime(const amsec: integer);
-begin
-  fthinkingtime := amsec;
-end;
-
-procedure newgame();
-begin
-end;
-
-procedure preparethinking();
-begin
-  fstop := false;
-end;
-
-procedure abortthinking();
-begin
-  fstop := true;
-end;
 
 function chooseaction(const agame: tgame): actionty;
 var
@@ -101,7 +71,17 @@ begin
     result := candidates[random(count)];
 end;
 
-function thinkingdelay(): boolean;
+function taleaengine.name(): unicodestring;
+begin
+  result := 'Aléa';
+end;
+
+function taleaengine.version(): unicodestring;
+begin
+  result := '0.1';
+end;
+
+function taleaengine.thinkingdelay(): boolean;
 var
   t: qword;
 begin
@@ -111,7 +91,7 @@ begin
   result := not fstop;
 end;
 
-function chooseturn(const agame: tgame): turnty;
+function taleaengine.chooseturn(const agame: tgame): turnty;
 var
   a: actionty;
   p: integer;

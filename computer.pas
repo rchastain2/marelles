@@ -1,6 +1,6 @@
 unit computer;
 
-{$mode objfpc}{$h+}{$codepage utf8}
+{$mode objfpc}{$h+}
 
 interface
 
@@ -28,20 +28,31 @@ function chooseturn(const agame: tgame): turnty;
 implementation
 
 uses
+  engine,
   alea,
   morrisplayer;
 
 var
-  fengine: enginety = en_builtin;
+  fengine: tengine = nil;
   fthinkingtime: integer = defaultthinkingtime;
 
 function setengine(const aengine: enginety): boolean;
+var
+  e: tengine;
 begin
-  if (aengine = en_morris) and not morrisplayer.loadengine() then
-    exit(false);
-  fengine := aengine;
-  setthinkingtime(fthinkingtime);
-  result := true;
+  case aengine of
+    en_morris:
+      e := tmorrisplayer.createengine();
+  else
+    e := taleaengine.create();
+  end;
+  result := e <> nil;
+  if result then
+  begin
+    fengine.free;
+    fengine := e;
+    fengine.setthinkingtime(fthinkingtime);
+  end;
 end;
 
 procedure setthinkingtime(const amsec: integer);
@@ -52,12 +63,7 @@ begin
     fthinkingtime := maxthinkingtime
   else
     fthinkingtime := amsec;
-  case fengine of
-    en_morris:
-      morrisplayer.setthinkingtime(fthinkingtime);
-  else
-    alea.setthinkingtime(fthinkingtime);
-  end;
+  fengine.setthinkingtime(fthinkingtime);
 end;
 
 function thinkingtime(): integer;
@@ -67,62 +73,37 @@ end;
 
 function enginename(): unicodestring;
 begin
-  case fengine of
-    en_morris:
-      result := morrisplayer.enginename();
-  else
-    result := alea.enginename();
-  end;
+  result := fengine.name();
 end;
 
 function enginefullname(): unicodestring;
 begin
-  case fengine of
-    en_morris:
-      result := morrisplayer.enginename() + ' ' + morrisplayer.engineversion();
-  else
-    result := alea.enginename() + ' ' + alea.engineversion();
-  end;
+  result := fengine.name() + ' ' + fengine.version();
 end;
 
 procedure newgame();
 begin
-  case fengine of
-    en_morris:
-      morrisplayer.newgame();
-  else
-    alea.newgame();
-  end;
+  fengine.newgame();
 end;
 
 procedure preparethinking();
 begin
-  case fengine of
-    en_morris:
-      morrisplayer.preparethinking();
-  else
-    alea.preparethinking();
-  end;
+  fengine.preparethinking();
 end;
 
 procedure abortthinking();
 begin
-  case fengine of
-    en_morris:
-      morrisplayer.abortthinking();
-  else
-    alea.abortthinking();
-  end;
+  fengine.abortthinking();
 end;
 
 function chooseturn(const agame: tgame): turnty;
 begin
-  case fengine of
-    en_morris:
-      result := morrisplayer.chooseturn(agame);
-  else
-    result := alea.chooseturn(agame);
-  end;
+  result := fengine.chooseturn(agame);
 end;
 
+initialization
+  setengine(en_builtin);
+
+finalization
+  fengine.free;
 end.
