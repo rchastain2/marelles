@@ -2,14 +2,14 @@ object mainfo: tmainfo
   bounds_x = 448
   bounds_y = 105
   bounds_cx = 528
-  bounds_cy = 585
+  bounds_cy = 574
   container.frame.localprops = []
   container.frame.localprops1 = []
   container.bounds = (
     0
     23
     528
-    562
+    551
   )
   mainmenu = menubar
   statfile = mainstat
@@ -33,18 +33,10 @@ object mainfo: tmainfo
   object statuslb: tlabel
     taborder = 1
     bounds_x = 8
-    bounds_y = 532
+    bounds_y = 528
     bounds_cx = 0
     bounds_cy = 15
     reffontheight = 15
-  end
-  object newgamebu: tbutton
-    taborder = 2
-    bounds_x = 400
-    bounds_y = 528
-    bounds_cx = 120
-    bounds_cy = 26
-    action = newgameact
   end
   object menubar: tmainmenu
     options = [mo_shortcutright, mo_commonwidth, mo_updateonidle]
@@ -215,6 +207,7 @@ object mainfo: tmainfo
     top = 88
   end
   object newgameact: taction
+    shortcut = 16462
     caption = '&Nouvelle partie'
     onexecute = newgameev
     left = 32

@@ -32,13 +32,12 @@ const
   appversion = '1.0';
   cellsize = 64;
   piecesize = 48;
-  containerheight = 562;
+  containerheight = 551;
 
 type
   tmainfo = class(tmainform)
     board: tpaintbox;
     statuslb: tlabel;
-    newgamebu: tbutton;
     menubar: tmainmenu;
     popupitemframe: tframecomp;
     popupitemframeactive: tframecomp;
