@@ -19,7 +19,6 @@ function setengine(const aengine: enginety): boolean;
 procedure setthinkingtime(const amsec: integer);
 function thinkingtime(): integer;
 function enginename(): unicodestring;
-function enginefullname(): unicodestring;
 procedure newgame();
 procedure preparethinking();
 procedure abortthinking();
@@ -74,11 +73,6 @@ end;
 function enginename(): unicodestring;
 begin
   result := fengine.name();
-end;
-
-function enginefullname(): unicodestring;
-begin
-  result := fengine.name() + ' ' + fengine.version();
 end;
 
 procedure newgame();

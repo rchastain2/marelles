@@ -18,7 +18,6 @@ type
     class function createengine(): tmorrisplayer;
     destructor destroy(); override;
     function name(): unicodestring; override;
-    function version(): unicodestring; override;
     procedure setthinkingtime(const amsec: integer); override;
     procedure newgame(); override;
     procedure abortthinking(); override;
@@ -57,12 +56,7 @@ end;
 
 function tmorrisplayer.name(): unicodestring;
 begin
-  result := unicodestring(utf8string(morris_name()));
-end;
-
-function tmorrisplayer.version(): unicodestring;
-begin
-  result := unicodestring(utf8string(morris_version()));
+  result := unicodestring(utf8string(morris_name())) + ' ' + unicodestring(utf8string(morris_version()));
 end;
 
 procedure tmorrisplayer.setthinkingtime(const amsec: integer);

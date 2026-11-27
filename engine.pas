@@ -15,7 +15,6 @@ type
   public
     constructor create();
     function name(): unicodestring; virtual; abstract;
-    function version(): unicodestring; virtual; abstract;
     procedure setthinkingtime(const amsec: integer); virtual;
     procedure newgame(); virtual;
     procedure preparethinking(); virtual;

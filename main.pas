@@ -121,7 +121,7 @@ var
 begin
   writelog('Marelles ' + appversion + ', compilé le ' + {$i %date%} + ' avec FPC ' + {$i %fpcversion%}, true);
   msg := readoptions();
-  writelog('Adversaire : ' + string(enginefullname) + format(', temps de réflexion : %d ms', [thinkingtime]));
+  writelog('Adversaire : ' + string(enginename) + format(', temps de réflexion : %d ms', [thinkingtime]));
   dir := filedir(sys_getapplicationpath) + 'images/';
   fplateau := tmaskedbitmap.create(bmk_rgb);
   fplateau.loadfromfile(dir + 'plateau.png');
@@ -199,7 +199,7 @@ begin
   fgame.init();
   writelog('Nouvelle partie');
   if fcomputer <> 0 then
-    writelog(string(enginefullname) + ' joue les ' + string(playernames[fcomputer]));
+    writelog(string(enginename) + ' joue les ' + string(playernames[fcomputer]));
   fselected := -1;
   fdragging := false;
   updatestatus();
@@ -296,7 +296,7 @@ begin
   if fcomputer = 0 then
     writelog('L''ordinateur ne joue plus')
   else
-    writelog(string(enginefullname) + ' joue les ' + string(playernames[fcomputer]));
+    writelog(string(enginename) + ' joue les ' + string(playernames[fcomputer]));
   updatestatus();
 end;
 
@@ -492,7 +492,7 @@ begin
   showmessage(
     'Marelles ' + appversion + lineend + lineend +
     'Compilé le ' + {$i %date%} + ' avec FPC ' + {$i %fpcversion%} + ' et MSEgui ' + mseguiversiontext + '.' + lineend + lineend +
-    'Adversaire : ' + enginefullname + ', temps de réflexion : ' + msestring(inttostr(thinkingtime)) + ' ms.',
+    'Adversaire : ' + enginename + ', temps de réflexion : ' + msestring(inttostr(thinkingtime)) + ' ms.',
     'À propos'
   );
 end;

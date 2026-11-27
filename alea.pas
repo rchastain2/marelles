@@ -19,7 +19,6 @@ type
     function thinkingdelay(): boolean;
   public
     function name(): unicodestring; override;
-    function version(): unicodestring; override;
     function chooseturn(const agame: tgame): turnty; override;
   end;
 
@@ -73,12 +72,7 @@ end;
 
 function taleaengine.name(): unicodestring;
 begin
-  result := 'Aléa';
-end;
-
-function taleaengine.version(): unicodestring;
-begin
-  result := '0.1';
+  result := 'Aléa 0.1';
 end;
 
 function taleaengine.thinkingdelay(): boolean;
