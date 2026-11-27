@@ -16,13 +16,18 @@ PC = fpc
 PFLAGS := -Mobjfpc -Sh
 PFLAGS += -Fu$(MSELIBDIR)*
 PFLAGS += -Fu$(MSELIBDIR)kernel/$(OS)
+PFLAGS += -Fumorris-engine
 PFLAGS += -CX -Xs -XX -O2
 
-SOURCES := $(wildcard *.pas) tables.inc
+SOURCES := $(wildcard *.pas) morris-engine/morrisengine.pas tables.inc
 PROGRAM := marelles
 
 $(PROGRAM): $(PROGRAM).pas $(SOURCES)
 	@$(PC) $(PFLAGS) $<
+
+engine:
+	@$(MAKE) -C morris-engine
+	@cp -v morris-engine/build/libmorris-engine.so .
 
 tables:
 	@$(PC) -Mobjfpc -Sh -FEfactory factory/factory.pas
@@ -45,4 +50,5 @@ clean:
 
 distclean: clean
 	@rm -fv $(PROGRAM) $(PROGRAM).dbg $(PROGRAM).exe
+	@rm -fv libmorris-engine.so
 	@rm -fv factory/factory factory/factory.exe

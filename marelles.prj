@@ -256,11 +256,12 @@ mainfile=marelles.pas
 targetfile=marelles${EXEEXT}
 makecommand=${COMPILER}
 makedir=
-unitdirs=4
+unitdirs=5
  ${MSEDIR}lib/addon/*/
  ${MSELIBDIR}kernel/$TARGETOSDIR/
  ${MSELIBDIR}kernel/
  ${MSELIBDIR}*/
+ ./morris-engine/
 unitpref=-Fu
 incpref=-Fi
 libpref=-Fl
@@ -286,11 +287,12 @@ makeoptionson=4
  34
  32
 aftcommandon=0
-unitdirson=4
+unitdirson=5
  196671
  65599
  196671
  65599
+ 196671
 uid=0
 macroon=1
  63

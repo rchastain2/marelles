@@ -10,9 +10,6 @@ uses
   game,
   computer;
 
-const
-  thinkingdelay = 1500;
-
 type
   tcomputerthread = class(tmsethread)
   private
@@ -32,14 +29,12 @@ type
 
 implementation
 
-uses
-  sysutils;
-
 constructor tcomputerthread.create(const agame: tgame; const aclient: tmsecomponent; const atag: integer);
 begin
   fgame := tgame.createcopy(agame);
   fclient := aclient;
   ftag := atag;
+  preparethinking();
   inherited create();
 end;
 
@@ -50,15 +45,10 @@ begin
 end;
 
 function tcomputerthread.execute(thread: tmsethread): integer;
-var
-  t: qword;
 begin
-  t := gettickcount64() + thinkingdelay;
-  while (gettickcount64() < t) and not terminated do
-    sleep(20);
+  fturn := chooseturn(fgame);
   if not terminated then
   begin
-    fturn := chooseturn(fgame);
     fdone := true;
     fclient.asyncevent(ftag);
   end;

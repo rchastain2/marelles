@@ -56,7 +56,15 @@ Click a free point to place a piece. To move a piece, drag it to its destination
 
 The status line shows whose turn it is, what to do and how many pieces are left to place.
 
-For now, the computer opponent, *Aléa 0.1*, plays a random legal action after a pause of 1.5 seconds that simulates thinking: it is only a placeholder for a real opponent.
+Two computer opponents are available, selected on the command line:
+
+| Option | Effect |
+|---|---|
+| `--engine=builtin` | *Aléa 0.1* (default): plays a random legal action after a pause that simulates thinking |
+| `--engine=morris` | *Morris 0.4*, through the *morris-engine* library: alpha-beta search |
+| `--time=<ms>` | thinking time, from 10 to 600000 ms (1500 by default): the pause of *Aléa*, the search time of *Morris* |
+
+If the *morris-engine* library cannot be loaded, *Aléa* is used instead and the status line says so.
 
 ## Building
 
@@ -76,6 +84,14 @@ make MSEDIR=/path/to/mseide-msegui/
 ```
 
 Or open *marelles.prj* in MSEide.
+
+To use the *Morris* opponent, build the *morris-engine* library (C++20 compiler required) and copy it next to the executable:
+
+```Bash
+make engine
+```
+
+The library is looked for in the folder of the executable first, then in the system paths.
 
 ## Credits
 

@@ -65,9 +65,17 @@ Le programme du dossier `factory` calcule ainsi les tables `neighbours` et `line
 
 ## Implémenter un adversaire artificiel
 
-L'adversaire actuel, *Aléa 0.1*, joue une action légale au hasard, après une pause de 1,5 seconde qui simule la réflexion. Il ne sert qu'à tenir la place d'un vrai adversaire.
+Deux adversaires sont disponibles, au choix sur la ligne de commande :
 
-Le programme est prêt à recevoir un vrai adversaire : il suffit de remplacer la fonction `chooseturn` de `computer.pas`, et de mettre à jour les constantes `enginename`, `engineversion` et `enginedescription` du même fichier. Le nom et la version de l'adversaire apparaissent dans le journal, dans la ligne d'état et dans la boîte « À propos ». Le reste (menus, thread de calcul, enchaînement du tour, journal) n'a pas à changer.
+| Option | Effet |
+|---|---|
+| `--engine=builtin` | *Aléa 0.1* (par défaut) : joue une action légale au hasard, après une pause qui simule la réflexion |
+| `--engine=morris` | *Morris 0.4*, par la bibliothèque *morris-engine* : recherche alpha-bêta |
+| `--time=<ms>` | temps de réflexion, de 10 à 600000 ms (1500 par défaut) : la pause d'*Aléa*, le temps de recherche de *Morris* |
+
+Si la bibliothèque *morris-engine* ne peut pas être chargée, *Aléa* la remplace, et la ligne d'état le signale. `make engine` compile la bibliothèque et la copie à côté de l'exécutable, où elle est cherchée en premier (puis dans les chemins du système).
+
+Tout ce qui concerne les adversaires est dans `computer.pas` : choix du moteur (`setengine`), temps de réflexion (`setthinkingtime`), nom et description (`enginename`, `enginefullname`, `enginedescription`), et la fonction `chooseturn`, qui aiguille vers l'un ou l'autre moteur. Pour ajouter un adversaire, il suffit d'y ajouter une valeur à `enginety` et la branche correspondante. Le nom et la version de l'adversaire apparaissent dans le journal, dans la ligne d'état et dans la boîte « À propos ». Le reste (menus, thread de calcul, enchaînement du tour, journal) n'a pas à changer.
 
 ### Le contrat de `chooseturn`
 
@@ -90,7 +98,7 @@ La fonction reçoit une copie de la partie et renvoie **le tour complet** de l'o
 | `ph_move` | pion à déplacer | point d'arrivée | pion à prendre si le déplacement ferme un moulin, sinon -1 |
 | `ph_remove` | inutilisé (-1) | pion adverse à prendre | inutilisé (-1) |
 
-La phase `ph_remove` au début du tour se présente quand le joueur, après avoir fermé un moulin, demande « Jouer » : l'ordinateur ne choisit alors que la prise.
+La phase `ph_remove` au début du tour se présente quand le joueur, après avoir fermé un moulin, demande « Jouer » : l'ordinateur ne choisit alors que la prise. *Morris Engine* ne sait pas traiter ce cas (il calcule toujours un coup complet) : la prise est alors choisie par *Aléa*.
 
 Quelques règles :
 
@@ -126,15 +134,15 @@ Le calcul se fait dans un thread, défini dans `computerthread.pas`, pour que la
 2. le thread appelle `chooseturn`, puis prévient la fenêtre par un événement asynchrone ;
 3. `finishturn` joue le tour dans le fil principal, avec `tgame`, ce qui l'écrit dans le journal.
 
-Une nouvelle partie, un changement de la réponse automatique ou la fermeture de la fenêtre interrompent le calcul (`stopthinking`) : le thread est prévenu par `terminate`, et la fenêtre attend sa fin.
+Une nouvelle partie, un changement de la réponse automatique ou la fermeture de la fenêtre interrompent le calcul (`stopthinking`) : `abortthinking` (dans `computer.pas`) arrête la pause d'*Aléa* ou la recherche de *Morris* (`morris_stop`), le thread est prévenu par `terminate`, et la fenêtre attend sa fin. L'indicateur d'arrêt est remis à zéro par `preparethinking`, à la création du thread.
 
 Trois points à respecter dans le moteur :
 
 - **ne pas écrire dans le journal** : `writelog` n'est pas prévu pour être appelé depuis plusieurs threads ;
 - **ne toucher ni à la fenêtre, ni à la vraie partie** : tout passe par la copie reçue et par le résultat renvoyé ;
-- **savoir s'interrompre** : une longue recherche doit tester régulièrement `terminated`, sans quoi la fenêtre reste bloquée jusqu'à la fin du calcul quand on l'interrompt. Il faudra pour cela passer le thread (ou un indicateur d'arrêt) à `chooseturn`.
+- **savoir s'interrompre** : une longue recherche doit tester régulièrement l'indicateur d'arrêt positionné par `abortthinking`, sans quoi la fenêtre reste bloquée jusqu'à la fin du calcul quand on l'interrompt.
 
-La constante `thinkingdelay` de `computerthread.pas` ajoute une pause artificielle avant le calcul, utile pour voir le thread à l'œuvre ; on la mettra à 0 une fois le vrai adversaire en place, et on retirera de la boîte « À propos » la phrase qui la mentionne.
+La fonction `thinkingdelay` de `computer.pas` fait la pause d'*Aléa*, de la durée donnée par `--time`, en s'interrompant dès que `abortthinking` est appelé.
 
 ### Mesurer la force du nouvel adversaire
 

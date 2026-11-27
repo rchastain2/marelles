@@ -26,7 +26,8 @@ uses
   game,
   computer,
   computerthread,
-  logfile;
+  logfile,
+  morrisengine;
 
 const
   appversion = '1.0';
@@ -77,6 +78,7 @@ type
     fdragpos: pointty;
     fcomputer: integer;
     fthread: tcomputerthread;
+    function readoptions(): msestring;
     procedure initgame();
     procedure updatestatus();
     procedure clickpoint(const aindex: integer);
@@ -104,7 +106,6 @@ uses
   main_mfm,
   msefileutils,
   msesysintf,
-  mseformatstr,
   mseformatpngread;
 
 const
@@ -116,9 +117,11 @@ const
 procedure tmainfo.createev(const sender: TObject);
 var
   dir: filenamety;
+  msg: msestring;
 begin
   writelog('Marelles ' + appversion + ', compilé le ' + {$i %date%} + ' avec FPC ' + {$i %fpcversion%}, true);
-  writelog('Adversaire : ' + string(enginefullname));
+  msg := readoptions();
+  writelog('Adversaire : ' + string(enginefullname) + format(', temps de réflexion : %d ms', [thinkingtime]));
   dir := filedir(sys_getapplicationpath) + 'images/';
   fplateau := tmaskedbitmap.create(bmk_rgb);
   fplateau.loadfromfile(dir + 'plateau.png');
@@ -140,6 +143,40 @@ begin
   fcomputer := 0;
   updatecomputer();
   initgame();
+  if msg <> '' then
+    statuslb.caption := msg;
+end;
+
+function tmainfo.readoptions(): msestring;
+var
+  i, n: integer;
+  s: string;
+  wantmorris: boolean;
+begin
+  result := '';
+  wantmorris := false;
+  for i := 1 to paramcount do
+  begin
+    s := paramstr(i);
+    if s = '--engine=builtin' then
+      wantmorris := false
+    else if s = '--engine=morris' then
+      wantmorris := true
+    else if copy(s, 1, 7) = '--time=' then
+    begin
+      if trystrtoint(copy(s, 8, maxint), n) and (n >= minthinkingtime) and (n <= maxthinkingtime) then
+        setthinkingtime(n)
+      else
+        writelog(format('Valeur incorrecte : %s (entre %d et %d ms)', [s, minthinkingtime, maxthinkingtime]));
+    end
+    else
+      writelog('Option inconnue : ' + s);
+  end;
+  if wantmorris and not setengine(en_morris) then
+  begin
+    writelog('Morris Engine introuvable (' + morrislibname + ')');
+    result := 'Morris Engine introuvable : ' + enginename + ' le remplace';
+  end;
 end;
 
 procedure tmainfo.destroyev(const sender: TObject);
@@ -158,6 +195,7 @@ end;
 procedure tmainfo.initgame();
 begin
   stopthinking();
+  computer.newgame();
   fgame.init();
   writelog('Nouvelle partie');
   if fcomputer <> 0 then
@@ -335,6 +373,7 @@ begin
   if fthread = nil then
     exit;
   writelog('Calcul de l''ordinateur interrompu');
+  abortthinking();
   fthread.terminate();
   application.waitforthread(fthread);
   freeandnil(fthread);
@@ -453,7 +492,7 @@ begin
   showmessage(
     'Marelles ' + appversion + lineend + lineend +
     'Compilé le ' + {$i %date%} + ' avec FPC ' + {$i %fpcversion%} + ' et MSEgui ' + mseguiversiontext + '.' + lineend + lineend +
-    'Adversaire : ' + enginefullname + ', qui ' + enginedescription + ' après une pause de ' + inttostrmse(thinkingdelay) + ' ms simulant la réflexion.',
+    'Adversaire : ' + enginefullname + ', qui ' + enginedescription + '.',
     'À propos'
   );
 end;
