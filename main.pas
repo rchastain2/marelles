@@ -21,6 +21,7 @@ uses
   msewidgets,
   mseforms,
   msesimplewidgets,
+  msestrings,
   msebitmap,
   mseactions,
   game,
@@ -83,7 +84,7 @@ type
     procedure checkcomputer();
     procedure setcomputer(const aplayer: integer);
     procedure updatecomputer();
-    function playerlabel(const aplayer: integer): msestring;
+    function playerprompt(const atext: msestring): msestring;
     procedure startthinking();
     procedure finishturn();
     procedure stopthinking();
@@ -172,24 +173,27 @@ end;
 procedure tmainfo.updatestatus();
 var
   s: msestring;
-  p: msestring;
 begin
-  p := playerlabel(fgame.player);
   if fthread <> nil then
-    s := p + ' : ' + enginename + ' joue...'
+    s := enginename + ' réfléchit...'
   else
     case fgame.phase of
       ph_place:
-        s := p + ' : placez un pion (' + inttostrmse(fgame.hand[fgame.player]) + ' en réserve)';
+        s := playerprompt('placez un pion');
       ph_move:
         if fselected < 0 then
-          s := p + ' : choisissez un pion à déplacer'
+          s := playerprompt('déplacez un pion')
         else
-          s := p + ' : choisissez la destination';
+          s := playerprompt('choisissez la destination');
       ph_remove:
-        s := p + ' : enlevez un pion adverse';
+        s := playerprompt('enlevez un pion adverse');
       ph_over:
-        s := 'Partie terminée. Les ' + playerlabel(fgame.winner) + ' ont gagné !';
+        if fcomputer = 0 then
+          s := 'Les ' + playernames[fgame.winner] + ' ont gagné !'
+        else if fgame.winner = fcomputer then
+          s := enginename + ' a gagné !'
+        else
+          s := 'Vous avez gagné !';
     end;
   statuslb.caption := s;
   playact.enabled := (fgame.phase <> ph_over) and (fthread = nil);
@@ -267,13 +271,12 @@ begin
     setcomputer(0);
 end;
 
-function tmainfo.playerlabel(const aplayer: integer): msestring;
+function tmainfo.playerprompt(const atext: msestring): msestring;
 begin
-  result := playernames[aplayer];
-  if fcomputer = aplayer then
-    result := result + ' (' + enginename + ')'
-  else if fcomputer <> 0 then
-    result := result + ' (vous)';
+  if (fcomputer <> 0) and (fgame.player <> fcomputer) then
+    result := mseuppercase(copy(atext, 1, 1)) + copy(atext, 2, length(atext) - 1)
+  else
+    result := playernames[fgame.player] + ' : ' + atext;
 end;
 
 procedure tmainfo.checkcomputer();
