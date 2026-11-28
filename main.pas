@@ -6,6 +6,7 @@ interface
 
 uses
   msetypes,
+  msestrings,
   mseglob,
   mseguiglob,
   mseguiintf,
@@ -100,7 +101,6 @@ type
     procedure checkcomputer();
     procedure setcomputer(const aplayer: integer);
     procedure updatecomputer();
-    function playerprompt(const atext: msestring): msestring;
     procedure startthinking();
     procedure finishturn();
     procedure stopthinking();
@@ -120,6 +120,7 @@ uses
   sysutils,
   main_mfm,
   msedrawtext,
+  texts,
   msefileutils,
   msesysintf,
   mseformatpngread;
@@ -201,7 +202,7 @@ begin
   if wantmorris and not setengine(en_morris) then
   begin
     writelog('Morris Engine introuvable (' + morrislibname + ')');
-    result := 'Morris Engine introuvable : ' + enginename + ' le remplace';
+    result := enginenotfoundtext(enginename);
   end;
 end;
 
@@ -243,25 +244,25 @@ var
   s: msestring;
 begin
   if fthread <> nil then
-    s := enginename + ' réfléchit...'
+    s := thinkingtext(enginename)
   else
     case fgame.phase of
       ph_place:
-        s := playerprompt('placez un pion');
+        s := prompttext(fgame.player, rs_placepiece);
       ph_move:
         if fselected < 0 then
-          s := playerprompt('déplacez un pion')
+          s := prompttext(fgame.player, rs_movepiece)
         else
-          s := playerprompt('choisissez la destination');
+          s := prompttext(fgame.player, rs_choosedestination);
       ph_remove:
-        s := playerprompt('enlevez un pion adverse');
+        s := prompttext(fgame.player, rs_removepiece);
       ph_over:
         if fcomputer = 0 then
-          s := 'Les ' + playernames[fgame.winner] + ' ont gagné !'
+          s := wintext(fgame.winner)
         else if fgame.winner = fcomputer then
-          s := enginename + ' a gagné !'
+          s := enginewinstext(enginename)
         else
-          s := 'Vous avez gagné !';
+          s := rs(rs_youwin);
     end;
   statuslb.caption := s;
   panel.invalidate();
@@ -271,13 +272,13 @@ end;
 function tmainfo.phasename(const aplayer: integer): msestring;
 begin
   if fgame.phase = ph_over then
-    result := 'terminée'
+    result := rs(rs_phaseover)
   else if fgame.hand[aplayer] > 0 then
-    result := 'pose'
+    result := rs(rs_phaseplace)
   else if fgame.mayjump(aplayer) then
-    result := 'vol'
+    result := rs(rs_phasejump)
   else
-    result := 'déplacement';
+    result := rs(rs_phasemove);
 end;
 
 procedure tmainfo.paintcard(const acanvas: tcanvas; const aplayer: integer);
@@ -300,17 +301,17 @@ begin
   acanvas.font.color := textcolor;
   acanvas.font.height := 18;
   acanvas.font.style := [fs_bold];
-  drawtext(acanvas, playernames[aplayer], mr(x + 64, y + 8, cardwidth - 72, 48), [tf_ycentered]);
+  drawtext(acanvas, colortext(aplayer), mr(x + 64, y + 8, cardwidth - 72, 48), [tf_ycentered]);
   acanvas.font.height := 13;
   acanvas.font.style := [];
-  drawrow(y + 64, 'Réserve', '');
+  drawrow(y + 64, rs(rs_reserve), '');
   for i := 0 to piecesperplayer - 1 do
     if i < fgame.hand[aplayer] then
       fsmallpieces[aplayer].paint(acanvas, mp(x + 5 + i * slotsize, y + 84))
     else
       fslot.paint(acanvas, mp(x + 5 + i * slotsize, y + 84));
-  drawrow(y + 108, 'Sur le plateau', msestring(inttostr(fgame.countpieces(aplayer))));
-  drawrow(y + 132, 'Phase', phasename(aplayer));
+  drawrow(y + 108, rs(rs_onboard), msestring(inttostr(fgame.countpieces(aplayer))));
+  drawrow(y + 132, rs(rs_phase), phasename(aplayer));
 end;
 
 procedure tmainfo.panelpaintev(const sender: twidget; const acanvas: tcanvas);
@@ -390,11 +391,6 @@ begin
     setcomputer(3 - fgame.player)
   else
     setcomputer(0);
-end;
-
-function tmainfo.playerprompt(const atext: msestring): msestring;
-begin
-  result := playernames[fgame.player] + ' : ' + atext;
 end;
 
 procedure tmainfo.checkcomputer();
@@ -575,9 +571,9 @@ begin
   writelog('Commande À propos');
   showmessage(
     'Marelles ' + appversion + lineend + lineend +
-    'Compilé le ' + {$i %date%} + ' avec FPC ' + {$i %fpcversion%} + ' et MSEgui ' + mseguiversiontext + '.' + lineend + lineend +
-    'Adversaire : ' + enginename + ', temps de réflexion : ' + msestring(inttostr(thinkingtime)) + ' ms.',
-    'À propos'
+    aboutbuildtext({$i %date%}, {$i %fpcversion%}, mseguiversiontext) + lineend + lineend +
+    aboutenginetext(enginename, thinkingtime),
+    rs(rs_abouttitle)
   );
 end;
 

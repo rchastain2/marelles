@@ -8,6 +8,7 @@ marelles
 *.log
 *.o
 *.ppu
+*.rsj
 *.sta
 
 mseide-msegui/

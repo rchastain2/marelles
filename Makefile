@@ -44,7 +44,7 @@ install-desktop: marelles.desktop
 	@cp -v $< ~/.local/share/applications/
 
 clean:
-	@rm -fv *.bak *.bak? *.log *.o *.ppu
+	@rm -fv *.bak *.bak? *.log *.o *.ppu *.rsj
 	@rm -rfv units
 	@rm -fv factory/*.o
 
