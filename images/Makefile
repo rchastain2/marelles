@@ -25,10 +25,10 @@ PFLAGS += -Fu$(MSELIBDIR)kernel/$(OS)
 PFLAGS += -Fi$(AGGPAS)
 PFLAGS += -Fu$(AGGPAS)
 
-PROGRAMS := pions plateau marques icone
+PROGRAMS := pions plateau marques icone panneau
 TOOLS := preview
 ICONS := icone16.png icone32.png icone48.png icone64.png icone128.png
-IMAGES := blanc.png noir.png plateau.png selection.png destination.png prise.png $(ICONS) marelles.ico
+IMAGES := blanc.png noir.png petitblanc.png petitnoir.png plateau.png panneau.png cadre.png emplacement.png selection.png destination.png prise.png $(ICONS) marelles.ico
 
 all: $(IMAGES)
 
@@ -41,11 +41,14 @@ preview.png: preview $(IMAGES)
 $(PROGRAMS): %: %.pas alphabitmap.pas piecedraw.pas
 	@$(PC) $(PFLAGS) $< > /dev/null
 
-blanc.png noir.png &: pions
+blanc.png noir.png petitblanc.png petitnoir.png &: pions
 	@./pions
 
 plateau.png: plateau wood2.png
 	@./plateau
+
+panneau.png cadre.png emplacement.png &: panneau wood2.png
+	@./panneau
 
 selection.png destination.png prise.png &: marques
 	@./marques

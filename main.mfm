@@ -40,139 +40,15 @@ object mainfo: tmainfo
     bounds_cy = 15
     reffontheight = 15
   end
-  object whitegb: tgroupbox
-    frame.caption = 'Blancs'
+  object panel: tpaintbox
     frame.localprops = []
     frame.localprops1 = []
     taborder = 2
-    bounds_x = 536
+    onpaint = panelpaintev
+    bounds_x = 528
     bounds_y = 8
-    bounds_cx = 144
-    bounds_cy = 72
-    object whitehandtx: tlabel
-      taborder = 0
-      bounds_x = 8
-      bounds_y = 8
-      bounds_cx = 0
-      bounds_cy = 15
-      caption = 'R'#233'serve'
-      reffontheight = 15
-    end
-    object whitehandlb: tlabel
-      optionswidget1 = [ow1_autoscale, ow1_autoheight, ow1_fontglyphheight]
-      taborder = 1
-      bounds_x = 104
-      bounds_y = 8
-      bounds_cx = 32
-      bounds_cy = 15
-      textflags = [tf_right, tf_ycentered]
-      reffontheight = 15
-    end
-    object whitecounttx: tlabel
-      taborder = 2
-      bounds_x = 8
-      bounds_y = 26
-      bounds_cx = 0
-      bounds_cy = 15
-      caption = 'Sur le plateau'
-      reffontheight = 15
-    end
-    object whitecountlb: tlabel
-      optionswidget1 = [ow1_autoscale, ow1_autoheight, ow1_fontglyphheight]
-      taborder = 3
-      bounds_x = 104
-      bounds_y = 26
-      bounds_cx = 32
-      bounds_cy = 15
-      textflags = [tf_right, tf_ycentered]
-      reffontheight = 15
-    end
-    object whitephasetx: tlabel
-      taborder = 4
-      bounds_x = 8
-      bounds_y = 44
-      bounds_cx = 0
-      bounds_cy = 15
-      caption = 'Phase'
-      reffontheight = 15
-    end
-    object whitephaselb: tlabel
-      optionswidget1 = [ow1_autoscale, ow1_autoheight, ow1_fontglyphheight]
-      taborder = 5
-      bounds_x = 48
-      bounds_y = 44
-      bounds_cx = 88
-      bounds_cy = 15
-      textflags = [tf_right, tf_ycentered]
-      reffontheight = 15
-    end
-  end
-  object blackgb: tgroupbox
-    frame.caption = 'Noirs'
-    frame.localprops = []
-    frame.localprops1 = []
-    taborder = 3
-    bounds_x = 536
-    bounds_y = 88
-    bounds_cx = 144
-    bounds_cy = 72
-    object blackhandtx: tlabel
-      taborder = 0
-      bounds_x = 8
-      bounds_y = 8
-      bounds_cx = 0
-      bounds_cy = 15
-      caption = 'R'#233'serve'
-      reffontheight = 15
-    end
-    object blackhandlb: tlabel
-      optionswidget1 = [ow1_autoscale, ow1_autoheight, ow1_fontglyphheight]
-      taborder = 1
-      bounds_x = 104
-      bounds_y = 8
-      bounds_cx = 32
-      bounds_cy = 15
-      textflags = [tf_right, tf_ycentered]
-      reffontheight = 15
-    end
-    object blackcounttx: tlabel
-      taborder = 2
-      bounds_x = 8
-      bounds_y = 26
-      bounds_cx = 0
-      bounds_cy = 15
-      caption = 'Sur le plateau'
-      reffontheight = 15
-    end
-    object blackcountlb: tlabel
-      optionswidget1 = [ow1_autoscale, ow1_autoheight, ow1_fontglyphheight]
-      taborder = 3
-      bounds_x = 104
-      bounds_y = 26
-      bounds_cx = 32
-      bounds_cy = 15
-      textflags = [tf_right, tf_ycentered]
-      reffontheight = 15
-    end
-    object blackphasetx: tlabel
-      taborder = 4
-      bounds_x = 8
-      bounds_y = 44
-      bounds_cx = 0
-      bounds_cy = 15
-      caption = 'Phase'
-      reffontheight = 15
-    end
-    object blackphaselb: tlabel
-      optionswidget1 = [ow1_autoscale, ow1_autoheight, ow1_fontglyphheight]
-      taborder = 5
-      bounds_x = 48
-      bounds_y = 44
-      bounds_cx = 88
-      bounds_cy = 15
-      textflags = [tf_right, tf_ycentered]
-      reffontheight = 15
-    end
+    bounds_cx = 152
+    bounds_cy = 512
   end
   object menubar: tmainmenu
     options = [mo_shortcutright, mo_commonwidth, mo_updateonidle]
@@ -226,7 +102,7 @@ object mainfo: tmainfo
         state = [as_localcaption]
       end>
     left = 536
-    top = 200
+    top = 184
   end
   object popupitemframe: tframecomp
     template.framei_left = 6
@@ -237,7 +113,7 @@ object mainfo: tmainfo
     template.colorclient = -2147483645
     template.optionsskin = [fso_nomouseanim, fso_noclickanim, fso_nofocusanim]
     left = 600
-    top = 200
+    top = 184
   end
   object popupitemframeactive: tframecomp
     template.framewidth = 1
@@ -252,7 +128,7 @@ object mainfo: tmainfo
     template.extraspace = 4
     template.colorclient = -2147483645
     left = 600
-    top = 232
+    top = 216
   end
   object popupframe: tframecomp
     template.framewidth = 1
@@ -262,7 +138,7 @@ object mainfo: tmainfo
     template.framei_right = 2
     template.framei_bottom = 2
     left = 600
-    top = 264
+    top = 248
   end
   object baritemframe: tframecomp
     template.framei_left = 6
@@ -273,7 +149,7 @@ object mainfo: tmainfo
     template.colorclient = -2147483645
     template.optionsskin = [fso_nomouseanim, fso_noclickanim, fso_nofocusanim]
     left = 600
-    top = 296
+    top = 280
   end
   object baritemframeactive: tframecomp
     template.framewidth = 1
@@ -288,14 +164,14 @@ object mainfo: tmainfo
     template.extraspace = 4
     template.colorclient = -2147483645
     left = 600
-    top = 328
+    top = 312
   end
   object separatorframe: tframecomp
     template.framei_top = 1
     template.colorclient = 11846872
     template.optionsskin = [fso_flat]
     left = 632
-    top = 200
+    top = 184
   end
   object barface: tfacecomp
     template.fade_pos.count = 2
@@ -310,7 +186,7 @@ object mainfo: tmainfo
     )
     template.fade_direction = gd_down
     left = 632
-    top = 232
+    top = 216
   end
   object activeface: tfacecomp
     template.fade_pos.count = 2
@@ -325,7 +201,7 @@ object mainfo: tmainfo
     )
     template.fade_direction = gd_down
     left = 632
-    top = 264
+    top = 248
   end
   object popupface: tfacecomp
     template.fade_pos.count = 2
@@ -340,44 +216,44 @@ object mainfo: tmainfo
     )
     template.fade_direction = gd_down
     left = 632
-    top = 296
+    top = 280
   end
   object newgameact: taction
     shortcut = 16462
     caption = '&Nouvelle partie'
     onexecute = newgameev
     left = 568
-    top = 200
+    top = 184
   end
   object playact: taction
     caption = '&Jouer'
     onexecute = playev
     left = 568
-    top = 232
+    top = 216
   end
   object autoplayact: taction
     caption = '&R'#233'ponse automatique'
     statfile = mainstat
     onexecute = autoplayev
     left = 568
-    top = 264
+    top = 248
   end
   object quitact: taction
     shortcut = 16465
     caption = '&Quitter'
     onexecute = quitev
     left = 568
-    top = 296
+    top = 280
   end
   object aboutact: taction
     caption = #192' &propos...'
     onexecute = aboutev
     left = 568
-    top = 328
+    top = 312
   end
   object mainstat: tstatfile
     filename = 'marelles.sta'
     left = 536
-    top = 232
+    top = 216
   end
 end

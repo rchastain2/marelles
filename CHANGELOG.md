@@ -4,6 +4,7 @@
 
 - Second computer opponent, *Morris 0.4* (alpha-beta search, engine by Dirk Farin), through the optional *morris* library, built by `make engine`. If the library cannot be loaded, *Aléa* is used instead and the status line says so.
 - Command line options `--engine=builtin|morris` to choose the opponent and `--time=<ms>` to set its thinking time.
+- Information panel: pieces left to place, pieces on the board and phase of each player.
 
 ## 1.0 (2026-09-27)
 

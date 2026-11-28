@@ -34,26 +34,19 @@ const
   cellsize = 64;
   piecesize = 48;
   containerheight = 551;
-  activeboxcolor = $E4EED8;
+  cardx = 8;
+  cardwidth = 136;
+  cardheight = 160;
+  cardys: array[1..2] of integer = (8, 344);
+  framemargin = 4;
+  slotsize = 14;
+  textcolor = $3C2814;
 
 type
   tmainfo = class(tmainform)
     board: tpaintbox;
     statuslb: tlabel;
-    whitegb: tgroupbox;
-    whitehandtx: tlabel;
-    whitehandlb: tlabel;
-    whitecounttx: tlabel;
-    whitecountlb: tlabel;
-    whitephasetx: tlabel;
-    whitephaselb: tlabel;
-    blackgb: tgroupbox;
-    blackhandtx: tlabel;
-    blackhandlb: tlabel;
-    blackcounttx: tlabel;
-    blackcountlb: tlabel;
-    blackphasetx: tlabel;
-    blackphaselb: tlabel;
+    panel: tpaintbox;
     menubar: tmainmenu;
     popupitemframe: tframecomp;
     popupitemframeactive: tframecomp;
@@ -73,6 +66,7 @@ type
     procedure createev(const sender: TObject);
     procedure destroyev(const sender: TObject);
     procedure paintev(const sender: twidget; const acanvas: tcanvas);
+    procedure panelpaintev(const sender: twidget; const acanvas: tcanvas);
     procedure mouseev(const sender: twidget; var ainfo: mouseeventinfoty);
     procedure newgameev(const sender: TObject);
     procedure playev(const sender: TObject);
@@ -86,6 +80,10 @@ type
     fselection: tmaskedbitmap;
     fdestination: tmaskedbitmap;
     fcapture: tmaskedbitmap;
+    fpanel: tmaskedbitmap;
+    fcardframe: tmaskedbitmap;
+    fsmallpieces: array[1..2] of tmaskedbitmap;
+    fslot: tmaskedbitmap;
     fgame: tgame;
     fselected: integer;
     fdragging: boolean;
@@ -96,7 +94,8 @@ type
     function readoptions(): msestring;
     procedure initgame();
     procedure updatestatus();
-    procedure updatepanel();
+    function phasename(const aplayer: integer): msestring;
+    procedure paintcard(const acanvas: tcanvas; const aplayer: integer);
     procedure clickpoint(const aindex: integer);
     procedure checkcomputer();
     procedure setcomputer(const aplayer: integer);
@@ -120,6 +119,7 @@ implementation
 uses
   sysutils,
   main_mfm,
+  msedrawtext,
   msefileutils,
   msesysintf,
   mseformatpngread;
@@ -151,6 +151,16 @@ begin
   fdestination.loadfromfile(dir + 'destination.png');
   fcapture := tmaskedbitmap.create(bmk_rgb);
   fcapture.loadfromfile(dir + 'prise.png');
+  fpanel := tmaskedbitmap.create(bmk_rgb);
+  fpanel.loadfromfile(dir + 'panneau.png');
+  fcardframe := tmaskedbitmap.create(bmk_rgb);
+  fcardframe.loadfromfile(dir + 'cadre.png');
+  fsmallpieces[1] := tmaskedbitmap.create(bmk_rgb);
+  fsmallpieces[1].loadfromfile(dir + 'petitblanc.png');
+  fsmallpieces[2] := tmaskedbitmap.create(bmk_rgb);
+  fsmallpieces[2].loadfromfile(dir + 'petitnoir.png');
+  fslot := tmaskedbitmap.create(bmk_rgb);
+  fslot.loadfromfile(dir + 'emplacement.png');
   icon.loadfromfile(dir + 'icone48.png');
   writelog(format('Hauteur de la barre de menu : %d px, correction : %d px', [container.bounds_y, containerheight - container.bounds_cy]));
   bounds_cy := bounds_cy + containerheight - container.bounds_cy;
@@ -206,6 +216,11 @@ begin
   fselection.free;
   fdestination.free;
   fcapture.free;
+  fpanel.free;
+  fcardframe.free;
+  fsmallpieces[1].free;
+  fsmallpieces[2].free;
+  fslot.free;
 end;
 
 procedure tmainfo.initgame();
@@ -249,38 +264,60 @@ begin
           s := 'Vous avez gagné !';
     end;
   statuslb.caption := s;
-  updatepanel();
+  panel.invalidate();
   playact.enabled := not (fgame.phase in [ph_remove, ph_over]) and (fthread = nil);
 end;
 
-procedure tmainfo.updatepanel();
+function tmainfo.phasename(const aplayer: integer): msestring;
+begin
+  if fgame.phase = ph_over then
+    result := 'terminée'
+  else if fgame.hand[aplayer] > 0 then
+    result := 'pose'
+  else if fgame.mayjump(aplayer) then
+    result := 'vol'
+  else
+    result := 'déplacement';
+end;
 
-  function phasename(const aplayer: integer): msestring;
-  begin
-    if fgame.phase = ph_over then
-      result := 'terminée'
-    else if fgame.hand[aplayer] > 0 then
-      result := 'pose'
-    else if fgame.mayjump(aplayer) then
-      result := 'vol'
-    else
-      result := 'déplacement';
-  end;
+procedure tmainfo.paintcard(const acanvas: tcanvas; const aplayer: integer);
+var
+  x, y, i: integer;
 
-  procedure update(const aplayer: integer; const abox: tgroupbox; const ahand, acount, aphase: tlabel);
+  procedure drawrow(const atop: integer; const alabel, avalue: msestring);
   begin
-    if (aplayer = fgame.player) and (fgame.phase <> ph_over) then
-      abox.color := activeboxcolor
-    else
-      abox.color := cl_default;
-    ahand.caption := msestring(inttostr(fgame.hand[aplayer]));
-    acount.caption := msestring(inttostr(fgame.countpieces(aplayer)));
-    aphase.caption := phasename(aplayer);
+    drawtext(acanvas, alabel, mr(x + 8, atop, cardwidth - 16, 16), [tf_ycentered]);
+    if avalue <> '' then
+      drawtext(acanvas, avalue, mr(x + 8, atop, cardwidth - 16, 16), [tf_right, tf_ycentered]);
   end;
 
 begin
-  update(1, whitegb, whitehandlb, whitecountlb, whitephaselb);
-  update(2, blackgb, blackhandlb, blackcountlb, blackphaselb);
+  x := cardx;
+  y := cardys[aplayer];
+  if (aplayer = fgame.player) and (fgame.phase <> ph_over) then
+    fcardframe.paint(acanvas, mp(x - framemargin, y - framemargin));
+  fpieces[aplayer].paint(acanvas, mp(x + 8, y + 8));
+  acanvas.font.color := textcolor;
+  acanvas.font.height := 18;
+  acanvas.font.style := [fs_bold];
+  drawtext(acanvas, playernames[aplayer], mr(x + 64, y + 8, cardwidth - 72, 48), [tf_ycentered]);
+  acanvas.font.height := 13;
+  acanvas.font.style := [];
+  drawrow(y + 64, 'Réserve', '');
+  for i := 0 to piecesperplayer - 1 do
+    if i < fgame.hand[aplayer] then
+      fsmallpieces[aplayer].paint(acanvas, mp(x + 5 + i * slotsize, y + 84))
+    else
+      fslot.paint(acanvas, mp(x + 5 + i * slotsize, y + 84));
+  drawrow(y + 108, 'Sur le plateau', msestring(inttostr(fgame.countpieces(aplayer))));
+  drawrow(y + 132, 'Phase', phasename(aplayer));
+end;
+
+procedure tmainfo.panelpaintev(const sender: twidget; const acanvas: tcanvas);
+begin
+  fpanel.paint(acanvas, nullpoint);
+  paintcard(acanvas, 1);
+  paintcard(acanvas, 2);
 end;
 
 function tmainfo.pointcenter(const aindex: integer): pointty;
